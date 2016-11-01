@@ -17,34 +17,45 @@ namespace PhotoShare.Migrations
             AutomaticMigrationsEnabled = false;
         }
 
-        private void AddUser(PhotoShareDbContext context)
+        private void AddUser(PhotoShareDbContext context, User user, String password, String roleName)
         {
             UserManager<User> userManager = new UserManager<User>(new UserStore<User>(context));
-            var user = new User()
-            {
-                UserName = "Dionmm",
-                Email = "dion@macinty.re",
-                PhoneNumber = "07881913156"
-            };
+            
             if (userManager.FindByName(user.UserName) == null)
             {
-                var identityResult = userManager.Create(user, "password");
+                var identityResult = userManager.Create(user, password);
                 if (identityResult.Succeeded)
                 {
                     var currentUser = userManager.FindByName(user.UserName);
-                    var roleResult = userManager.AddToRole(currentUser.Id, "administrator");
+                    var roleResult = userManager.AddToRole(currentUser.Id, roleName);
                 }
             }
         }
 
-        private void AddRole(PhotoShareDbContext context)
+        private void AddRole(PhotoShareDbContext context, String roleName)
         {
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-
-            string roleName = "administrator";
+            
             if (!roleManager.RoleExists(roleName))
             {
                 IdentityResult roleResult = roleManager.Create(new IdentityRole(roleName));
+            }
+        }
+
+        private void AddMessage(PhotoShareDbContext context, User user, String content)
+        {
+            UserManager<User> userManager = new UserManager<User>(new UserStore<User>(context));
+            var currentUser = userManager.FindByName(user.UserName);
+            if (currentUser != null)
+            {
+                context.Messages.AddOrUpdate(
+                    new Message
+                    {
+                        Content = content,
+                        User = currentUser,
+                        CreatedDateTime = DateTime.Now,
+                        UpdatedDateTime = DateTime.Now
+                    });
             }
         }
         protected override void Seed(PhotoShare.DataAccess.DataContext.PhotoShareDbContext context)
@@ -61,8 +72,30 @@ namespace PhotoShare.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
-            AddRole(context);
-            AddUser(context);
+
+            var dion = new User
+            {
+                UserName = "Dionmm",
+                Email = "dion@macinty.re",
+                PhoneNumber = "07881913156"
+            };
+            var jack = new User
+            {
+                UserName = "JackBlack",
+                Email = "jack@macinty.re",
+                PhoneNumber = "07881913134"
+            };
+            const string administrator = "administrator";
+            const string photographer = "photographer";
+
+            AddRole(context, administrator);
+            AddRole(context, photographer);
+            AddUser(context, dion, "password", administrator);
+            AddUser(context, jack, "password", photographer);
+            AddMessage(context, dion, "Testing messages");
+            AddMessage(context, jack, "Hey man how's it going");
+            AddMessage(context, dion, "nb mate, you");
+            AddMessage(context, dion, "ye gg bby");
 
         }
     }

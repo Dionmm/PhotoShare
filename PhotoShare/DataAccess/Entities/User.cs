@@ -8,6 +8,7 @@ namespace PhotoShare.DataAccess.Entities
 {
     public class User : IdentityUser
     {
-
+        public virtual ICollection<Message> Messages { get; set; }
+        public virtual ICollection<Purchase> Purchases { get; set; }
     }
 }

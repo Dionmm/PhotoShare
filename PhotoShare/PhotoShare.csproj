@@ -142,10 +142,20 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="DataAccess\DataContext\PhotoShareDbContext.cs" />
+    <Compile Include="DataAccess\Entities\BannedWord.cs" />
+    <Compile Include="DataAccess\Entities\BaseEntity.cs" />
+    <Compile Include="DataAccess\Entities\ExifData.cs" />
+    <Compile Include="DataAccess\Entities\Message.cs" />
+    <Compile Include="DataAccess\Entities\Photo.cs" />
+    <Compile Include="DataAccess\Entities\Purchase.cs" />
     <Compile Include="DataAccess\Entities\User.cs" />
     <Compile Include="Migrations\201611011529047_Initial.cs" />
     <Compile Include="Migrations\201611011529047_Initial.Designer.cs">
       <DependentUpon>201611011529047_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611011545252_CompleteDbStructure.cs" />
+    <Compile Include="Migrations\201611011545252_CompleteDbStructure.Designer.cs">
+      <DependentUpon>201611011545252_CompleteDbStructure.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -170,6 +180,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201611011529047_Initial.resx">
       <DependentUpon>201611011529047_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611011545252_CompleteDbStructure.resx">
+      <DependentUpon>201611011545252_CompleteDbStructure.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
