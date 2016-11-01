@@ -243,3 +243,6 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+
+#Web.config to prevent leaking DB connection details
+web.config
