@@ -1,5 +1,6 @@
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using PhotoShare.App_Start;
 using PhotoShare.DataAccess.DataContext;
 using PhotoShare.DataAccess.Entities;
 
@@ -19,7 +20,7 @@ namespace PhotoShare.Migrations
 
         private void AddUser(PhotoShareDbContext context, User user, String password, String roleName)
         {
-            UserManager<User> userManager = new UserManager<User>(new UserStore<User>(context));
+            var userManager = new ApplicationUserManager(new UserStore<User>(context));
             
             if (userManager.FindByName(user.UserName) == null)
             {
@@ -44,7 +45,7 @@ namespace PhotoShare.Migrations
 
         private void AddMessage(PhotoShareDbContext context, User user, String content)
         {
-            UserManager<User> userManager = new UserManager<User>(new UserStore<User>(context));
+            var userManager = new ApplicationUserManager(new UserStore<User>(context));
             var currentUser = userManager.FindByName(user.UserName);
             if (currentUser != null)
             {

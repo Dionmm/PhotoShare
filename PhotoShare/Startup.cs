@@ -18,6 +18,7 @@ namespace PhotoShare
             var config = new HttpConfiguration();
             WebApiConfig.Register(config);
             app.UseCors(CorsOptions.AllowAll);
+            ConfigureAuth(app);
             app.UseWebApi(config);
         }
     }
