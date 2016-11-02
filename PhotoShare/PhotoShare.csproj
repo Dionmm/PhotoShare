@@ -143,6 +143,7 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\PhotoController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="DataAccess\DataContext\PhotoShareDbContext.cs" />
     <Compile Include="DataAccess\Entities\BannedWord.cs" />
@@ -152,6 +153,12 @@
     <Compile Include="DataAccess\Entities\Photo.cs" />
     <Compile Include="DataAccess\Entities\Purchase.cs" />
     <Compile Include="DataAccess\Entities\User.cs" />
+    <Compile Include="DataAccess\IUnitOfWork.cs" />
+    <Compile Include="DataAccess\Repositories\Interfaces\IPhotoRepository.cs" />
+    <Compile Include="DataAccess\Repositories\Interfaces\IRepository.cs" />
+    <Compile Include="DataAccess\Repositories\PhotoRepository.cs" />
+    <Compile Include="DataAccess\Repositories\Repository.cs" />
+    <Compile Include="DataAccess\UnitOfWork.cs" />
     <Compile Include="Migrations\201611011529047_Initial.cs" />
     <Compile Include="Migrations\201611011529047_Initial.Designer.cs">
       <DependentUpon>201611011529047_Initial.cs</DependentUpon>
@@ -159,6 +166,10 @@
     <Compile Include="Migrations\201611011545252_CompleteDbStructure.cs" />
     <Compile Include="Migrations\201611011545252_CompleteDbStructure.Designer.cs">
       <DependentUpon>201611011545252_CompleteDbStructure.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611021918575_PhotoRequiresUser.cs" />
+    <Compile Include="Migrations\201611021918575_PhotoRequiresUser.Designer.cs">
+      <DependentUpon>201611021918575_PhotoRequiresUser.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels\ChangePasswordBindingModel.cs" />
@@ -179,7 +190,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="DataAccess\Repositories\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201611011529047_Initial.resx">
@@ -187,6 +197,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611011545252_CompleteDbStructure.resx">
       <DependentUpon>201611011545252_CompleteDbStructure.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611021918575_PhotoRequiresUser.resx">
+      <DependentUpon>201611021918575_PhotoRequiresUser.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -59,6 +59,26 @@ namespace PhotoShare.Migrations
                     });
             }
         }
+
+        private void AddPhoto(PhotoShareDbContext context, User user, String name, String address, decimal price)
+        {
+            var userManager = new ApplicationUserManager(new UserStore<User>(context));
+            var currentUser = userManager.FindByName(user.UserName);
+            if (currentUser != null)
+            {
+                context.Photos.Add(
+                    new Photo
+                    {
+                        Name = name,
+                        Address = address,
+                        Price = price,
+                        CreatedDateTime = DateTime.Now,
+                        UpdatedDateTime = DateTime.Now,
+                        User = currentUser
+                    });
+            }
+
+        }
         protected override void Seed(PhotoShare.DataAccess.DataContext.PhotoShareDbContext context)
         {
             //  This method will be called after migrating to the latest version.
@@ -97,6 +117,9 @@ namespace PhotoShare.Migrations
             AddMessage(context, jack, "Hey man how's it going");
             AddMessage(context, dion, "nb mate, you");
             AddMessage(context, dion, "ye gg bby");
+            AddPhoto(context, dion, "MyPhoto1", "/blah/folder/file.jpg", 4.50m);
+            AddPhoto(context, dion, "MyPhoto2", "/blah/folder/file.jpg", 8.59m);
+            AddPhoto(context, jack, "MyFirstPhoto", "/blah/folder/file.jpg", 0);
 
         }
     }
