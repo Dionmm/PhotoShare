@@ -8,7 +8,6 @@ namespace PhotoShare.DataAccess.Entities
 {
     public class Photo : BaseEntity
     {
-
         public string Name { get; set; }
         public string Address { get; set; }
         public string OptimisedVersionAddress { get; set; }
