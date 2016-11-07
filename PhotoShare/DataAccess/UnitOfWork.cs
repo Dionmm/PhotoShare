@@ -21,9 +21,9 @@ namespace PhotoShare.DataAccess
         }
 
         public IPhotoRepository Photos { get; private set; }
-        public async Task<int> Save()
+        public int Save()
         {
-            return await _context.SaveChangesAsync();
+            return _context.SaveChanges();
         }
 
         public void Dispose()

@@ -13,6 +13,7 @@ namespace PhotoShare.DataAccess.Entities
     {
         public virtual ICollection<Message> Messages { get; set; }
         public virtual ICollection<Purchase> Purchases { get; set; }
+        public virtual ICollection<Photo> Photos { get; set; }
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<User> manager, string authenticationType)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType

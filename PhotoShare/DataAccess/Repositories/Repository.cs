@@ -19,9 +19,9 @@ namespace PhotoShare.DataAccess.Repositories
             _entities = Context.Set<T>();
         }
 
-        public async Task<T> Get(int id)
+        public T Get(int id)
         {
-            return await _entities.FindAsync(id);
+            return _entities.Find(id);
         }
 
         public IEnumerable<T> GetAll()

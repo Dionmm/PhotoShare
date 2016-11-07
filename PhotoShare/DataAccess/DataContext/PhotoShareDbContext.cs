@@ -12,7 +12,7 @@ namespace PhotoShare.DataAccess.DataContext
     {
         public PhotoShareDbContext() : base("DefaultConnection")
         {
-            this.Configuration.LazyLoadingEnabled = false;
+            //this.Configuration.LazyLoadingEnabled = false;
         }
 
         public virtual DbSet<BannedWord> BannedWords { get; set; }
