@@ -22,71 +22,44 @@ namespace PhotoShare.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly PhotoShareDbContext _context = new PhotoShareDbContext();
+        private readonly ApplicationUserManager _userManager;
+        private readonly IModelFactory _modelFactory;
         public PhotoController()
         {
             _unitOfWork = new UnitOfWork(_context);
+            _userManager = new ApplicationUserManager(new UserStore<User>(_context));
+            _modelFactory = new ModelFactory();
         }
 
         public IHttpActionResult Get()
         {
             var photos = _unitOfWork.Photos.GetAll();
-            var model = new List<PhotoModel>();
-            foreach (var photo in photos)
-            {
-                var temp = new PhotoModel
-                {
-                    Id = photo.Id,
-                    Name = photo.Name,
-                    Price = photo.Price,
-                    Address = photo.Address,
-                    OptimisedAddress = photo.OptimisedVersionAddress,
-                    UserId = photo.User.Id,
-                    UserName = photo.User.UserName
-                };
-                model.Add(temp);
-            }
-
-            return Ok(model);
+            var models = photos.Select(_modelFactory.Create);
+            
+            return Ok(models);
         }
         
         public IHttpActionResult Get(int id)
         {
             var photo = _unitOfWork.Photos.Get(id);
-            var model = new PhotoModel
-            {
-                Id = photo.Id,
-                Name = photo.Name,
-                Price = photo.Price,
-                Address = photo.Address,
-                OptimisedAddress = photo.OptimisedVersionAddress,
-                UserId = photo.User.Id,
-                UserName = photo.User.UserName
-            };
-
+            var model = _modelFactory.Create(photo);
 
             return Ok(model);
         }
         
-        [Authorize(Roles = "administrator,photgrapher")]
+        [Authorize(Roles = "administrator,photographer")]
         public IHttpActionResult AddPhoto(PhotoModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-            var userManager = new ApplicationUserManager(new UserStore<User>(_context));
-            User currentUser = userManager.FindById(User.Identity.GetUserId());
-            var photo = new Photo
-            {
-                Name = model.Name,
-                Address = "my/url/" + model.Name,
-                Price = model.Price,
-                User = currentUser,
-                CreatedDateTime = DateTime.Now,
-                UpdatedDateTime = DateTime.Now
-            };
-            _context.Photos.Add(photo);
-            if (_context.SaveChanges() == 0)
+
+            User currentUser = _userManager.FindById(User.Identity.GetUserId());
+            var photo = _modelFactory.Create(model, currentUser);
+            _unitOfWork.Photos.Add(photo);
+
+            if (_unitOfWork.Save() == 0)
             {
                 return InternalServerError();
             }
@@ -98,13 +71,7 @@ namespace PhotoShare.Controllers
         public IHttpActionResult DeletePhoto(int id)
         {
             var photo = _unitOfWork.Photos.Get(id);
-            var model = new PhotoModel
-            {
-                Name = photo.Name,
-                Price = photo.Price,
-                UserId = photo.User.Id,
-                UserName = photo.User.UserName
-            };
+            var model = _modelFactory.Create(photo);
 
             if (model.UserId != User.Identity.GetUserId())
             {
