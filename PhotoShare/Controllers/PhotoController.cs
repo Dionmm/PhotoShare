@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -24,6 +26,7 @@ namespace PhotoShare.Controllers
         private readonly PhotoShareDbContext _context = new PhotoShareDbContext();
         private readonly ApplicationUserManager _userManager;
         private readonly IModelFactory _modelFactory;
+
         public PhotoController()
         {
             _unitOfWork = new UnitOfWork(_context);
@@ -35,10 +38,10 @@ namespace PhotoShare.Controllers
         {
             var photos = _unitOfWork.Photos.GetAll();
             var models = photos.Select(_modelFactory.Create);
-            
+
             return Ok(models);
         }
-        
+
         public IHttpActionResult Get(int id)
         {
             var photo = _unitOfWork.Photos.Get(id);
@@ -46,7 +49,7 @@ namespace PhotoShare.Controllers
 
             return Ok(model);
         }
-        
+
         [Authorize(Roles = "administrator,photographer")]
         public IHttpActionResult AddPhoto(PhotoModel model)
         {
@@ -66,6 +69,29 @@ namespace PhotoShare.Controllers
             return Ok("Photo Saved");
         }
 
+        [Authorize(Roles = "administrator,photographer")]
+        [HttpPut]
+        public IHttpActionResult UpdatePhoto(int id, PhotoModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            var photo = _unitOfWork.Photos.Get(id);
+            if (model.UserId != User.Identity.GetUserId() && !User.IsInRole("administrator"))
+            {
+                return Unauthorized();
+            }
+
+            photo.Name = model.Name;
+            photo.Price = model.Price;
+            photo.UpdatedDateTime = DateTime.Now;
+
+            _unitOfWork.Save();
+
+            return Ok("Photo Updated");
+        }
+
         [Authorize(Roles = "administrator, photographer")]
         [HttpDelete]
         public IHttpActionResult DeletePhoto(int id)
@@ -73,7 +99,7 @@ namespace PhotoShare.Controllers
             var photo = _unitOfWork.Photos.Get(id);
             var model = _modelFactory.Create(photo);
 
-            if (model.UserId != User.Identity.GetUserId())
+            if (model.UserId != User.Identity.GetUserId() && !User.IsInRole("administrator"))
             {
                 return Unauthorized();
             }

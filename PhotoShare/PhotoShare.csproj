@@ -183,6 +183,10 @@
     <Compile Include="Migrations\201611021918575_PhotoRequiresUser.Designer.cs">
       <DependentUpon>201611021918575_PhotoRequiresUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611071402004_RemoveUserRequirement.cs" />
+    <Compile Include="Migrations\201611071402004_RemoveUserRequirement.Designer.cs">
+      <DependentUpon>201611071402004_RemoveUserRequirement.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels\ChangePasswordBindingModel.cs" />
     <Compile Include="Models\AccountBindingModels\RegisterBindingModel.cs" />
@@ -216,6 +220,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611021918575_PhotoRequiresUser.resx">
       <DependentUpon>201611021918575_PhotoRequiresUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611071402004_RemoveUserRequirement.resx">
+      <DependentUpon>201611071402004_RemoveUserRequirement.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
