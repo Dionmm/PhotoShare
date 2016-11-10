@@ -112,5 +112,20 @@ namespace PhotoShare.Controllers
             
             return Ok("Photo Removed");
         }
+
+        [Route("Search")]
+        [HttpGet]
+        public IHttpActionResult Search(string q)
+        {
+            var photos = from p in _context.Photos
+                         .Include("Purchases")
+                         .Include("User")
+                         where p.Name.Contains(q)
+                         select p;
+
+            var models = photos.Select(_modelFactory.Create);
+
+            return Ok(models);
+        }
     }
 }
