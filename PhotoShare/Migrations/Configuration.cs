@@ -18,7 +18,7 @@ namespace PhotoShare.Migrations
             AutomaticMigrationsEnabled = false;
         }
 
-        private void AddUser(PhotoShareDbContext context, User user, String password, String roleName)
+        private void AddUser(PhotoShareDbContext context, User user, string password, string roleName)
         {
             var userManager = new ApplicationUserManager(new UserStore<User>(context));
             
@@ -33,7 +33,7 @@ namespace PhotoShare.Migrations
             }
         }
 
-        private void AddRole(PhotoShareDbContext context, String roleName)
+        private void AddRole(PhotoShareDbContext context, string roleName)
         {
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             
@@ -43,7 +43,7 @@ namespace PhotoShare.Migrations
             }
         }
 
-        private void AddMessage(PhotoShareDbContext context, User user, String content)
+        private void AddMessage(PhotoShareDbContext context, User user, string content)
         {
             var userManager = new ApplicationUserManager(new UserStore<User>(context));
             var currentUser = userManager.FindByName(user.UserName);
@@ -60,7 +60,7 @@ namespace PhotoShare.Migrations
             }
         }
 
-        private void AddPhoto(PhotoShareDbContext context, User user, String name, String address, decimal price)
+        private void AddPhoto(PhotoShareDbContext context, User user, string name, string address, decimal price, string optimisedAddress)
         {
             var userManager = new ApplicationUserManager(new UserStore<User>(context));
             var currentUser = userManager.FindByName(user.UserName);
@@ -71,6 +71,7 @@ namespace PhotoShare.Migrations
                     {
                         Name = name,
                         Address = address,
+                        OptimisedVersionAddress = optimisedAddress,
                         Price = price,
                         CreatedDateTime = DateTime.Now,
                         UpdatedDateTime = DateTime.Now,
@@ -117,9 +118,18 @@ namespace PhotoShare.Migrations
             AddMessage(context, jack, "Hey man how's it going");
             AddMessage(context, dion, "nb mate, you");
             AddMessage(context, dion, "ye gg bby");
-            AddPhoto(context, dion, "MyPhoto1", "/blah/folder/file.jpg", 4.50m);
-            AddPhoto(context, dion, "MyPhoto2", "/blah/folder/file.jpg", 8.59m);
-            AddPhoto(context, jack, "MyFirstPhoto", "/blah/folder/file.jpg", 0);
+            AddPhoto(context, dion, "OnTheBeach", "http://placekitten.com/250/300", 4.50m, "http://placekitten.com/250/300");
+            AddPhoto(context, dion, "DownThePark", "http://placekitten.com/150/300", 8.59m, "http://placekitten.com/150/300");
+            AddPhoto(context, jack, "SomeGirl", "http://placekitten.com/200/350", 0, "http://placekitten.com/200/350");
+            AddPhoto(context, dion, "AGuyAtThePub", "http://placekitten.com/400/300", 4.50m, "http://placekitten.com/400/300");
+            AddPhoto(context, dion, "Testing", "http://placekitten.com/200/450", 8.59m, "http://placekitten.com/200/450");
+            AddPhoto(context, jack, "HaveAnotherOne", "http://placekitten.com/100/300", 0, "http://placekitten.com/100/300");
+            AddPhoto(context, dion, "HeilHydra", "http://placekitten.com/500/300", 4.50m, "http://placekitten.com/500/300");
+            AddPhoto(context, dion, "AmSexyNAKenIt", "http://placekitten.com/200/300", 8.59m, "http://placekitten.com/200/300");
+            AddPhoto(context, jack, "WhatsYourName", "http://placekitten.com/200/330", 0, "http://placekitten.com/200/330");
+            AddPhoto(context, dion, "RandomString", "http://placekitten.com/200/600", 4.50m, "http://placekitten.com/200/600");
+            AddPhoto(context, dion, "ThisIsFun", "http://placekitten.com/200/200", 8.59m, "http://placekitten.com/200/200");
+            AddPhoto(context, jack, "HaveACake", "http://placekitten.com/200/150", 0, "http://placekitten.com/200/150");
 
         }
     }

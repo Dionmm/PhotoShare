@@ -30,8 +30,18 @@ namespace PhotoShare.Models
                 Address = "my/url/" + model.Name,
                 Price = model.Price,
                 User = currentUser,
-                CreatedDateTime = DateTime.Now, 
+                CreatedDateTime = DateTime.Now,
                 UpdatedDateTime = DateTime.Now
+            };
+        }
+
+
+        public UserModel Create(User user)
+        {
+            return new UserModel
+            {
+                Email = user.Email,
+                UserName = user.UserName
             };
         }
     }

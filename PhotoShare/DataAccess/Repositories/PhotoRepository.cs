@@ -18,5 +18,10 @@ namespace PhotoShare.DataAccess.Repositories
         {
             return Context.Photos.OrderByDescending(x => x.CreatedDateTime).Take(count).ToList();
         }
+
+        public Photo GetPhotoByName(string name)
+        {
+            return Context.Photos.FirstOrDefault(p => p.Name == name);
+        }
     }
 }

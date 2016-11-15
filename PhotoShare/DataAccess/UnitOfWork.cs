@@ -20,7 +20,7 @@ namespace PhotoShare.DataAccess
             Photos = new PhotoRepository(_context);
         }
 
-        public IPhotoRepository Photos { get; private set; }
+        public IPhotoRepository Photos { get;  }
         public int Save()
         {
             return _context.SaveChanges();

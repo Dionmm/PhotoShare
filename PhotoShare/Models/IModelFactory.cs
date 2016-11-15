@@ -11,5 +11,6 @@ namespace PhotoShare.Models
     {
         PhotoModel Create(Photo photo);
         Photo Create(PhotoModel model, User currentUser);
+        UserModel Create(User user);
     }
 }
