@@ -13,7 +13,7 @@ namespace PhotoShare.DataAccess.Entities
         public string OptimisedVersionAddress { get; set; }
         public decimal Price { get; set; }
         public virtual User User { get; set; }
-        //public virtual ICollection<ExifData> ExifData { get; set; }
+        public virtual ICollection<ExifData> ExifData { get; set; }
         public virtual ICollection<Purchase> Purchases { get; set; }
     }
 }

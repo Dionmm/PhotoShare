@@ -87,6 +87,7 @@ namespace PhotoShare.Controllers
             return Ok();
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public IHttpActionResult GetUserInfo(string id)
         {
