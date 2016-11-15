@@ -99,7 +99,9 @@ namespace PhotoShare.Migrations
             {
                 UserName = "Dionmm",
                 Email = "dion@macinty.re",
-                PhoneNumber = "07881913156"
+                PhoneNumber = "07881913156",
+                FirstName = "Dion",
+                LastName = "MacIntyre"
             };
             var jack = new User
             {

@@ -11,7 +11,16 @@ namespace PhotoShare.Models
         [Display(Name = "UserName")]
         public string UserName { get; set; }
 
-        [Display(Name = "Email")]
-        public string Email { get; set; }
+        [Display(Name = "FirstName")]
+        public string FirstName { get; set; }
+
+        [Display(Name = "LastName")]
+        public string LastName { get; set; }
+
+        [Display(Name = "ProfileDescription")]
+        public string ProfileDescription { get; set; }
+
+        [Display(Name = "ProfilePhoto")]
+        public string ProfilePhoto { get; set; }
     }
 }

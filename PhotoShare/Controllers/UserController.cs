@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using PhotoShare.App_Start;
 using PhotoShare.DataAccess.Entities;
+using PhotoShare.Models;
 using PhotoShare.Models.AccountBindingModels;
 
 namespace PhotoShare.Controllers
@@ -19,16 +20,18 @@ namespace PhotoShare.Controllers
     public class UserController : ApiController
     {
         private ApplicationUserManager _userManager;
+        private readonly IModelFactory _modelFactory;
 
         public UserController()
         {
-            //Default Constructor
+            _modelFactory = new ModelFactory(); //I have no idea what I'm doing now
         }
         public UserController(ApplicationUserManager userManager,
             ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
         {
             UserManager = userManager;
             AccessTokenFormat = accessTokenFormat;
+            
         }
 
         public ApplicationUserManager UserManager
@@ -84,7 +87,18 @@ namespace PhotoShare.Controllers
             return Ok();
         }
 
+        [HttpGet]
+        public IHttpActionResult GetUserInfo(string id)
+        {
+            var user = UserManager.FindById(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
 
+            var model = _modelFactory.Create(user);
+            return Ok(model);
+        }
         #region ErrorHandling
 
         private IHttpActionResult GetErrorResult(IdentityResult result)

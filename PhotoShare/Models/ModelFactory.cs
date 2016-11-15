@@ -40,8 +40,11 @@ namespace PhotoShare.Models
         {
             return new UserModel
             {
-                Email = user.Email,
-                UserName = user.UserName
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                ProfileDescription = user.ProfileDescription,
+                ProfilePhoto = user.ProfilePhoto
             };
         }
     }

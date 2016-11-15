@@ -11,6 +11,10 @@ namespace PhotoShare.DataAccess.Entities
 {
     public class User : IdentityUser
     {
+        public virtual string FirstName { get; set; }
+        public virtual string LastName { get; set; }
+        public virtual string ProfileDescription { get; set; }
+        public virtual string ProfilePhoto { get; set; }
         public virtual ICollection<Message> Messages { get; set; }
         public virtual ICollection<Purchase> Purchases { get; set; }
         public virtual ICollection<Photo> Photos { get; set; }

@@ -188,6 +188,14 @@
     <Compile Include="Migrations\201611071402004_RemoveUserRequirement.Designer.cs">
       <DependentUpon>201611071402004_RemoveUserRequirement.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611151938522_updateUserEntity.cs" />
+    <Compile Include="Migrations\201611151938522_updateUserEntity.Designer.cs">
+      <DependentUpon>201611151938522_updateUserEntity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611151941278_firstNameandLastName.cs" />
+    <Compile Include="Migrations\201611151941278_firstNameandLastName.Designer.cs">
+      <DependentUpon>201611151941278_firstNameandLastName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels\ChangePasswordBindingModel.cs" />
     <Compile Include="Models\AccountBindingModels\RegisterBindingModel.cs" />
@@ -225,6 +233,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611071402004_RemoveUserRequirement.resx">
       <DependentUpon>201611071402004_RemoveUserRequirement.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611151938522_updateUserEntity.resx">
+      <DependentUpon>201611151938522_updateUserEntity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611151941278_firstNameandLastName.resx">
+      <DependentUpon>201611151941278_firstNameandLastName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
