@@ -34,6 +34,8 @@ namespace PhotoShare.Controllers
             _modelFactory = new ModelFactory();
         }
 
+        /*GET Requests*/
+
         public IHttpActionResult Get()
         {
             var photos = _unitOfWork.Photos.GetAll();
@@ -63,13 +65,39 @@ namespace PhotoShare.Controllers
             return Ok(model);
         }
 
+        /*POST Requests*/
+
+        /* This is a complete hack due to ASP no longer binding
+         * HttpPostedFileBase to a model when passed as a parameter,
+         * instead it returns a 415 unsupported media type. Without the knowledge
+         * of how to write a custom media formatter for images, this is the fallback.
+         * So, to bypass this the client will first post the image file to AddPhotoFile() 
+         * where it is saved to the Azure Storage Account and a Db entry will be made
+         * with the URI and user's details (accessed through Identity). Once the
+         * client receives a success callback a second post will be made to AddPhotoInfo()
+         * with the extra data (name, price, exif data, etc.).
+         */
 
         [Authorize(Roles = "administrator,photographer")]
-        public IHttpActionResult AddPhoto(PhotoModel model)
+        [HttpPost]
+        public IHttpActionResult AddPhotoFile()
+        {
+            var file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
+            var blobHandler = new BlobHandler();
+            var uri = blobHandler.Upload(file);
+            //Add User to DB
+
+            return Ok(uri);
+        }
+
+        [Authorize(Roles = "administrator,photographer")]
+        [HttpPost]
+        [Route("info")]
+        public IHttpActionResult AddPhotoInfo(PhotoModel model)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+               return BadRequest();
             }
 
             User currentUser = _userManager.FindById(User.Identity.GetUserId());
@@ -78,10 +106,12 @@ namespace PhotoShare.Controllers
 
             if (_unitOfWork.Save() == 0)
             {
-                return InternalServerError();
+               return InternalServerError();
             }
-            return Ok("Photo Saved");
+            return Ok();
         }
+
+        /*PUT Requests*/
 
         [Authorize(Roles = "administrator,photographer")]
         [HttpPut]
@@ -106,6 +136,8 @@ namespace PhotoShare.Controllers
             return Ok("Photo Updated");
         }
 
+        /*DELETE Requests*/
+
         [Authorize(Roles = "administrator, photographer")]
         [HttpDelete]
         public IHttpActionResult DeletePhoto(int id)
@@ -127,19 +159,5 @@ namespace PhotoShare.Controllers
             return Ok("Photo Removed");
         }
 
-        [Route("Search")]
-        [HttpGet]
-        public IHttpActionResult Search(string q)
-        {
-            var photos = from p in _context.Photos
-                         .Include("Purchases")
-                         .Include("User")
-                         where p.Name.Contains(q)
-                         select p;
-
-            var models = photos.Select(_modelFactory.Create);
-
-            return Ok(models);
-        }
     }
 }

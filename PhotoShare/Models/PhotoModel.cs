@@ -9,9 +9,10 @@ namespace PhotoShare.Models
 {
     public class PhotoModel
     {
+        public HttpPostedFile File { get; set; }
         [Display(Name = "Id")]
         public int Id { get; set; }
-        [Required]
+        //[Required]
         [Display(Name = "Name")]
         public string Name { get; set; }
 
