@@ -73,7 +73,7 @@ namespace PhotoShare.Controllers
 
         /* This is a complete hack due to ASP no longer binding
          * HttpPostedFileBase to a model when passed as a parameter,
-         * instead it returns a 415 unsupported media type. Without the knowledge
+         * instead it returns a 415 'Unsupported media type'. Without the knowledge
          * of how to write a custom media formatter for images, this is the fallback.
          * So, to bypass this the client will first POST the image file to AddPhotoFile() 
          * where it is saved to the Azure Storage Account and a Db entry will be made
@@ -90,9 +90,6 @@ namespace PhotoShare.Controllers
             {
                 return BadRequest();
             }
-            var file = HttpContext.Current.Request.Files[0];
-            var blobHandler = new BlobHandler();
-
 
             User currentUser = _userManager.FindById(User.Identity.GetUserId());
             if (currentUser == null)
@@ -100,13 +97,24 @@ namespace PhotoShare.Controllers
                 return InternalServerError();
             }
 
+            var file = HttpContext.Current.Request.Files[0];
+            var blobHandler = new BlobHandler();
+
+            //Generates a GUID + file exntension to be used as the blobName
+            var blobName = CreateBlobName(file.FileName);
+
             //Uploads photo and returns the uri of the uploaded photo
-            var uri = blobHandler.Upload(file);
+            var uri = blobHandler.Upload(file, blobName);
+
+
+            //Removes the file extension from the fileName. This
+            //photoName is then used when creating the photo below
+            var photoName = RemoveFileExtension(file.FileName);
 
             //Add the Photo to DB
             var photo = new Photo
             {
-                Name = file.FileName,
+                Name = photoName,
                 Address = uri,
                 OptimisedVersionAddress = uri, //Temporary until images can be optimised
                 User = currentUser,
@@ -181,16 +189,15 @@ namespace PhotoShare.Controllers
 
         #region Helpers
 
-        private string TruncatePhotoName(string fileName)
+        private static string RemoveFileExtension(string fileName)
         {
-
-            return string.Empty;
+            return System.IO.Path.GetFileNameWithoutExtension(fileName);
         }
 
-        private string CreatePhotoFileName()
+        private static string CreateBlobName(string fileName)
         {
-
-            return string.Empty;
+            string extension = System.IO.Path.GetExtension(fileName);
+            return Guid.NewGuid() + extension;
         }
         #endregion
     }
