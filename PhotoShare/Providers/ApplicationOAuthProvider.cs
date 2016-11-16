@@ -39,10 +39,14 @@ namespace PhotoShare.Providers
                 return;
             }
 
+            //If user.FirstName is null an exception will be thrown as user.FirstName needs to
+            //be returned in CreateProperties() at the bottom of this file
+            string firstName = user.FirstName != null ? user.FirstName : user.UserName;
+
             ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager,
                OAuthDefaults.AuthenticationType);
 
-            AuthenticationProperties properties = CreateProperties(user.UserName, user.FirstName);
+            AuthenticationProperties properties = CreateProperties(user.UserName, firstName);
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);
         }

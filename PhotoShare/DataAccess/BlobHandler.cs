@@ -27,7 +27,7 @@ namespace PhotoShare.DataAccess
             
         }
 
-        public Uri Upload(HttpPostedFile file)
+        public string Upload(HttpPostedFile file)
         {
             // Retrieve reference to a blob named "myblob".
             CloudBlockBlob blockBlob = _container.GetBlockBlobReference(file.FileName);
@@ -35,7 +35,7 @@ namespace PhotoShare.DataAccess
             // Create or overwrite the "myblob" blob with contents from a local file.
             blockBlob.UploadFromStream(file.InputStream);
 
-            return blockBlob.Uri;
+            return blockBlob.Uri.ToString();
         }
 
         

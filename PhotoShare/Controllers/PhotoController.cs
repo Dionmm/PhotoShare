@@ -47,6 +47,10 @@ namespace PhotoShare.Controllers
         public IHttpActionResult Get(int id)
         {
             var photo = _unitOfWork.Photos.Get(id);
+            if (photo == null)
+            {
+                return NotFound();
+            }
             var model = _modelFactory.Create(photo);
 
             return Ok(model);
@@ -71,10 +75,10 @@ namespace PhotoShare.Controllers
          * HttpPostedFileBase to a model when passed as a parameter,
          * instead it returns a 415 unsupported media type. Without the knowledge
          * of how to write a custom media formatter for images, this is the fallback.
-         * So, to bypass this the client will first post the image file to AddPhotoFile() 
+         * So, to bypass this the client will first POST the image file to AddPhotoFile() 
          * where it is saved to the Azure Storage Account and a Db entry will be made
          * with the URI and user's details (accessed through Identity). Once the
-         * client receives a success callback a second post will be made to AddPhotoInfo()
+         * client receives a success callback a second PUT will be made to UpdatePhoto()
          * with the extra data (name, price, exif data, etc.).
          */
 
@@ -82,33 +86,43 @@ namespace PhotoShare.Controllers
         [HttpPost]
         public IHttpActionResult AddPhotoFile()
         {
-            var file = HttpContext.Current.Request.Files.Count > 0 ? HttpContext.Current.Request.Files[0] : null;
-            var blobHandler = new BlobHandler();
-            var uri = blobHandler.Upload(file);
-            //Add User to DB
-
-            return Ok(uri);
-        }
-
-        [Authorize(Roles = "administrator,photographer")]
-        [HttpPost]
-        [Route("info")]
-        public IHttpActionResult AddPhotoInfo(PhotoModel model)
-        {
-            if (!ModelState.IsValid)
+            if (HttpContext.Current.Request.Files.Count <= 0)
             {
-               return BadRequest();
+                return BadRequest();
             }
+            var file = HttpContext.Current.Request.Files[0];
+            var blobHandler = new BlobHandler();
+
 
             User currentUser = _userManager.FindById(User.Identity.GetUserId());
-            var photo = _modelFactory.Create(model, currentUser);
-            _unitOfWork.Photos.Add(photo);
+            if (currentUser == null)
+            {
+                return InternalServerError();
+            }
 
+            //Uploads photo and returns the uri of the uploaded photo
+            var uri = blobHandler.Upload(file);
+
+            //Add the Photo to DB
+            var photo = new Photo
+            {
+                Name = file.FileName,
+                Address = uri,
+                OptimisedVersionAddress = uri, //Temporary until images can be optimised
+                User = currentUser,
+                CreatedDateTime = DateTime.Now,
+                UpdatedDateTime = DateTime.Now
+            };
+
+            _unitOfWork.Photos.Add(photo);
             if (_unitOfWork.Save() == 0)
             {
-               return InternalServerError();
+                return InternalServerError();
             }
-            return Ok();
+
+            var model = _modelFactory.Create(photo);
+
+            return Ok(model);
         }
 
         /*PUT Requests*/
@@ -122,6 +136,11 @@ namespace PhotoShare.Controllers
                 return BadRequest();
             }
             var photo = _unitOfWork.Photos.Get(id);
+            if (photo == null)
+            {
+                return NotFound();
+            }
+
             if (model.UserId != User.Identity.GetUserId() && !User.IsInRole("administrator"))
             {
                 return Unauthorized();
@@ -159,5 +178,20 @@ namespace PhotoShare.Controllers
             return Ok("Photo Removed");
         }
 
+
+        #region Helpers
+
+        private string TruncatePhotoName(string fileName)
+        {
+
+            return string.Empty;
+        }
+
+        private string CreatePhotoFileName()
+        {
+
+            return string.Empty;
+        }
+        #endregion
     }
 }
