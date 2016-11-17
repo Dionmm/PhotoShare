@@ -18,9 +18,12 @@ namespace PhotoShare.DataAccess
             _context = context;
             //Add Repositories in here
             Photos = new PhotoRepository(_context);
+            ExifData = new ExifDataRepository(_context);
         }
 
-        public IPhotoRepository Photos { get;  }
+        public IPhotoRepository Photos { get; }
+        public IExifDataRepository ExifData { get; }
+
         public int Save()
         {
             return _context.SaveChanges();

@@ -143,23 +143,31 @@ namespace PhotoShare.Controllers
             {
                 return BadRequest();
             }
-            var photo = _unitOfWork.Photos.Get(id);
-            if (photo == null)
-            {
-                return NotFound();
-            }
 
             if (model.UserId != User.Identity.GetUserId() && !User.IsInRole("administrator"))
             {
                 return Unauthorized();
             }
 
+            var photo = _unitOfWork.Photos.Get(id);
+            if (photo == null)
+            {
+                return NotFound();
+            }
+
             photo.Name = model.Name;
             photo.Price = model.Price;
             photo.UpdatedDateTime = DateTime.Now;
 
-            _unitOfWork.Save();
+            foreach (var exifModel in model.Exif)
+            {
+                exifModel.Photo = photo;
+                var exifData = _modelFactory.Create(exifModel);
+                _unitOfWork.ExifData.Add(exifData);
+            }
 
+            _unitOfWork.Save();
+            
             return Ok("Photo Updated");
         }
 

@@ -47,5 +47,29 @@ namespace PhotoShare.Models
                 ProfilePhoto = user.ProfilePhoto
             };
         }
+
+
+        public ExifData Create(ExifDataModel model)
+        {
+            return new ExifData
+            {
+                ExifName = model.Name,
+                ExifValue = model.Value,
+                Photo = model.Photo,
+                CreatedDateTime = DateTime.Now,
+                UpdatedDateTime = DateTime.Now
+            };
+        }
+
+        public ExifDataModel Create(ExifData exifData)
+        {
+            return new ExifDataModel
+            {
+                Name = exifData.ExifName,
+                Value = exifData.ExifValue,
+                Photo = exifData.Photo
+            };
+        }
+
     }
 }

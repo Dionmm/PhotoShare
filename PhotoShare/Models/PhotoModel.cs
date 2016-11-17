@@ -9,10 +9,10 @@ namespace PhotoShare.Models
 {
     public class PhotoModel
     {
-        public HttpPostedFile File { get; set; }
+        [Required]
         [Display(Name = "Id")]
         public int Id { get; set; }
-        //[Required]
+
         [Display(Name = "Name")]
         public string Name { get; set; }
 
@@ -30,6 +30,9 @@ namespace PhotoShare.Models
 
         [Display(Name = "UserName")]
         public string UserName { get; set; }
+
+        [Display(Name = "ExifCollection")]
+        public IEnumerable<ExifDataModel> Exif { get; set; }
 
     }
 }

@@ -112,7 +112,7 @@ namespace PhotoShare.Migrations
             const string administrator = "administrator";
             const string photographer = "photographer";
 
-            AddRole(context, administrator);
+            /*AddRole(context, administrator);
             AddRole(context, photographer);
             AddUser(context, dion, "password", administrator);
             AddUser(context, jack, "password", photographer);
@@ -131,7 +131,7 @@ namespace PhotoShare.Migrations
             AddPhoto(context, jack, "WhatsYourName", "http://placekitten.com/200/330", 0, "http://placekitten.com/200/330");
             AddPhoto(context, dion, "RandomString", "http://placekitten.com/200/600", 4.50m, "http://placekitten.com/200/600");
             AddPhoto(context, dion, "ThisIsFun", "http://placekitten.com/200/200", 8.59m, "http://placekitten.com/200/200");
-            AddPhoto(context, jack, "HaveACake", "http://placekitten.com/200/150", 0, "http://placekitten.com/200/150");
+            AddPhoto(context, jack, "HaveACake", "http://placekitten.com/200/150", 0, "http://placekitten.com/200/150");*/
 
         }
     }

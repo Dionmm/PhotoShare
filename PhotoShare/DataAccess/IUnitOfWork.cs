@@ -10,6 +10,7 @@ namespace PhotoShare.DataAccess
     public interface IUnitOfWork : IDisposable
     {
         IPhotoRepository Photos { get; }
+        IExifDataRepository ExifData { get; }
         int Save();
     }
 }

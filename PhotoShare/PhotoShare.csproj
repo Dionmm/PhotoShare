@@ -194,6 +194,8 @@
     <Compile Include="DataAccess\Entities\Purchase.cs" />
     <Compile Include="DataAccess\Entities\User.cs" />
     <Compile Include="DataAccess\IUnitOfWork.cs" />
+    <Compile Include="DataAccess\Repositories\ExifDataRepository.cs" />
+    <Compile Include="DataAccess\Repositories\Interfaces\IExifDataRepository.cs" />
     <Compile Include="DataAccess\Repositories\Interfaces\IPhotoRepository.cs" />
     <Compile Include="DataAccess\Repositories\Interfaces\IRepository.cs" />
     <Compile Include="DataAccess\Repositories\PhotoRepository.cs" />
@@ -226,9 +228,14 @@
     <Compile Include="Migrations\201611151941278_firstNameandLastName.Designer.cs">
       <DependentUpon>201611151941278_firstNameandLastName.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611171330463_fixingExifDataTableName.cs" />
+    <Compile Include="Migrations\201611171330463_fixingExifDataTableName.Designer.cs">
+      <DependentUpon>201611171330463_fixingExifDataTableName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels\ChangePasswordBindingModel.cs" />
     <Compile Include="Models\AccountBindingModels\RegisterBindingModel.cs" />
+    <Compile Include="Models\ExifDataModel.cs" />
     <Compile Include="Models\IModelFactory.cs" />
     <Compile Include="Models\ModelFactory.cs" />
     <Compile Include="Models\PhotoModel.cs" />
@@ -269,6 +276,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611151941278_firstNameandLastName.resx">
       <DependentUpon>201611151941278_firstNameandLastName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611171330463_fixingExifDataTableName.resx">
+      <DependentUpon>201611171330463_fixingExifDataTableName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

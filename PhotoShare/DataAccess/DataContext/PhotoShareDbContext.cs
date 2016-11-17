@@ -34,6 +34,7 @@ namespace PhotoShare.DataAccess.DataContext
             modelBuilder.Entity<IdentityUserLogin>().ToTable("UserLogins");
             modelBuilder.Entity<IdentityUserClaim>().ToTable("UserClaims");
             modelBuilder.Entity<IdentityRole>().ToTable("Roles");
+            modelBuilder.Entity<ExifData>().ToTable("ExifData");
 
         }
     }
