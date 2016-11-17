@@ -161,8 +161,7 @@ namespace PhotoShare.Controllers
 
             foreach (var exifModel in model.Exif)
             {
-                exifModel.Photo = photo;
-                var exifData = _modelFactory.Create(exifModel);
+                var exifData = _modelFactory.Create(exifModel, photo);
                 _unitOfWork.ExifData.Add(exifData);
             }
 

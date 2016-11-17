@@ -15,8 +15,5 @@ namespace PhotoShare.Models
         [Display(Name = "Value")]
         public string Value { get; set; }
 
-        [Display(Name = "Photo")]
-        public virtual Photo Photo { get; set; }
-
     }
 }

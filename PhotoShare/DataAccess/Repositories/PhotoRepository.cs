@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Data.Entity;
 using PhotoShare.DataAccess.DataContext;
 using PhotoShare.DataAccess.Entities;
 using PhotoShare.DataAccess.Repositories.Interfaces;
@@ -21,7 +22,7 @@ namespace PhotoShare.DataAccess.Repositories
 
         public Photo GetPhotoByName(string name)
         {
-            return Context.Photos.FirstOrDefault(p => p.Name == name);
+            return Context.Photos.Include(c => c.ExifData).FirstOrDefault(p => p.Name == name);
         }
     }
 }

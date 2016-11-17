@@ -12,7 +12,7 @@ namespace PhotoShare.Models
         PhotoModel Create(Photo photo);
         Photo Create(PhotoModel model, User currentUser);
         UserModel Create(User user);
-        ExifData Create(ExifDataModel model);
+        ExifData Create(ExifDataModel model, Photo photo);
         ExifDataModel Create(ExifData exifData);
     }
 }

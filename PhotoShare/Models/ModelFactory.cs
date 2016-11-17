@@ -10,6 +10,16 @@ namespace PhotoShare.Models
     {
         public PhotoModel Create(Photo photo)
         {
+            ICollection<ExifDataModel> collection = new List<ExifDataModel>();
+            if (photo.ExifData != null)
+            {
+                foreach (var exif in photo.ExifData)
+                {
+                    collection.Add(this.Create(exif));
+                }
+            }
+            
+
             return new PhotoModel
             {
                 Id = photo.Id,
@@ -18,7 +28,8 @@ namespace PhotoShare.Models
                 Address = photo.Address,
                 OptimisedAddress = photo.OptimisedVersionAddress,
                 UserId = photo.User.Id,
-                UserName = photo.User.UserName
+                UserName = photo.User.UserName,
+                Exif = collection
             };
         }
 
@@ -49,13 +60,13 @@ namespace PhotoShare.Models
         }
 
 
-        public ExifData Create(ExifDataModel model)
+        public ExifData Create(ExifDataModel model, Photo photo)
         {
             return new ExifData
             {
                 ExifName = model.Name,
                 ExifValue = model.Value,
-                Photo = model.Photo,
+                Photo = photo,
                 CreatedDateTime = DateTime.Now,
                 UpdatedDateTime = DateTime.Now
             };
@@ -66,8 +77,7 @@ namespace PhotoShare.Models
             return new ExifDataModel
             {
                 Name = exifData.ExifName,
-                Value = exifData.ExifValue,
-                Photo = exifData.Photo
+                Value = exifData.ExifValue
             };
         }
 
