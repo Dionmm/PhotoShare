@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using MetadataExtractor;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -99,6 +100,8 @@ namespace PhotoShare.Controllers
 
             var file = HttpContext.Current.Request.Files[0];
             var blobHandler = new BlobHandler();
+            IEnumerable<Directory> directories = ImageMetadataReader.ReadMetadata(file.InputStream);
+
 
             //Generates a GUID + file exntension to be used as the blobName
             var blobName = CreateBlobName(file.FileName);
@@ -112,6 +115,8 @@ namespace PhotoShare.Controllers
             var photoName = RemoveFileExtension(file.FileName);
 
             //Add the Photo to DB
+            //Doesn't use ModelFactory because i would need to create a new PhotoModel anyway
+            //which is similarly slow and messy
             var photo = new Photo
             {
                 Name = photoName,
@@ -121,8 +126,25 @@ namespace PhotoShare.Controllers
                 CreatedDateTime = DateTime.Now,
                 UpdatedDateTime = DateTime.Now
             };
-
             _unitOfWork.Photos.Add(photo);
+
+            //Extracts the metadata for the photo and 
+            //creates a new ExifData for each, then saved
+            //to DB
+            foreach (var directory in directories)
+            {
+                foreach (var tag in directory.Tags)
+                {
+                    var modelx = new ExifDataModel
+                    {
+                        Name = tag.Name,
+                        Value = tag.Description
+                    };
+                    _unitOfWork.ExifData.Add(_modelFactory.Create(modelx, photo));
+                }
+            }
+            
+            
             if (_unitOfWork.Save() == 0)
             {
                 return InternalServerError();

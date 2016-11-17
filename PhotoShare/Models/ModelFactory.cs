@@ -38,7 +38,8 @@ namespace PhotoShare.Models
             return new Photo
             {
                 Name = model.Name,
-                Address = "my/url/" + model.Name,
+                Address = model.Address,
+                OptimisedVersionAddress = model.OptimisedAddress,
                 Price = model.Price,
                 User = currentUser,
                 CreatedDateTime = DateTime.Now,
