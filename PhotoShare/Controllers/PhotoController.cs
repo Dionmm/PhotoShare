@@ -103,7 +103,7 @@ namespace PhotoShare.Controllers
             IEnumerable<Directory> directories = ImageMetadataReader.ReadMetadata(file.InputStream);
 
 
-            //Generates a GUID + file exntension to be used as the blobName
+            //Generates a GUID + file extension to be used as the blobName
             var blobName = CreateBlobName(file.FileName);
 
             //Uploads photo and returns the uri of the uploaded photo
@@ -135,12 +135,12 @@ namespace PhotoShare.Controllers
             {
                 foreach (var tag in directory.Tags)
                 {
-                    var modelx = new ExifDataModel
+                    var exifModel = new ExifDataModel
                     {
                         Name = tag.Name,
                         Value = tag.Description
                     };
-                    _unitOfWork.ExifData.Add(_modelFactory.Create(modelx, photo));
+                    _unitOfWork.ExifData.Add(_modelFactory.Create(exifModel, photo));
                 }
             }
             
@@ -228,6 +228,7 @@ namespace PhotoShare.Controllers
             string extension = System.IO.Path.GetExtension(fileName);
             return Guid.NewGuid() + extension;
         }
+        
         #endregion
     }
 }

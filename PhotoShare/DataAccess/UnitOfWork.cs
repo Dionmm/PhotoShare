@@ -19,10 +19,13 @@ namespace PhotoShare.DataAccess
             //Add Repositories in here
             Photos = new PhotoRepository(_context);
             ExifData = new ExifDataRepository(_context);
+            Purchases = new PurchaseRepository(_context);
         }
 
         public IPhotoRepository Photos { get; }
         public IExifDataRepository ExifData { get; }
+        public IPurchaseRepository Purchases { get; }
+
 
         public int Save()
         {
