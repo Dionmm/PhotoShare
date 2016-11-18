@@ -180,12 +180,15 @@ namespace PhotoShare.Controllers
             photo.Name = model.Name;
             photo.Price = model.Price;
             photo.UpdatedDateTime = DateTime.Now;
-
-            foreach (var exifModel in model.Exif)
+            if (model.Exif != null)
             {
-                var exifData = _modelFactory.Create(exifModel, photo);
-                _unitOfWork.ExifData.Add(exifData);
+                foreach (var exifModel in model.Exif)
+                {
+                    var exifData = _modelFactory.Create(exifModel, photo);
+                    _unitOfWork.ExifData.Add(exifData);
+                }
             }
+            
 
             _unitOfWork.Save();
             
