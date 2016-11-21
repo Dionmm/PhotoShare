@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -16,8 +17,8 @@ using Stripe;
 
 namespace PhotoShare.Controllers
 {
-    [RoutePrefix("api/Purchase")]
     [Authorize]
+    [RoutePrefix("api/Purchase")]
     public class PurchaseController : ApiController
     {
 
@@ -32,10 +33,14 @@ namespace PhotoShare.Controllers
             _userManager = new ApplicationUserManager(new UserStore<User>(_context));
             _modelFactory = new ModelFactory();
         }
-
+        
         [HttpPost]
-        public IHttpActionResult PurchasePhoto(int id, string token)
+        public IHttpActionResult PurchasePhoto(int id, PurchaseModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             var photo = _unitOfWork.Photos.Get(id);
             if (photo == null)
             {
@@ -47,10 +52,13 @@ namespace PhotoShare.Controllers
             {
                 return InternalServerError();
             }
-
-            if (CreateStripeCharge(photo.Price, photo.Name, token) != "succeeded")
+            if (photo.Price == 0.0m)
             {
-                return BadRequest();
+                return BadRequest("Photo does not require payment");
+            }
+            if (CreateStripeCharge(photo.Price, photo.Name, model.Token) != "succeeded")
+            {
+                return BadRequest("Payment did not succeed");
             }
 
             if (AddPurchase(photo, currentUser) == 0)

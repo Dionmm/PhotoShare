@@ -14,5 +14,6 @@ namespace PhotoShare.Models
         UserModel Create(User user);
         ExifData Create(ExifDataModel model, Photo photo);
         ExifDataModel Create(ExifData exifData);
+        Purchase Create(PurchaseModel model);
     }
 }

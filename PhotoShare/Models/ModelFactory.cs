@@ -82,5 +82,9 @@ namespace PhotoShare.Models
             };
         }
 
+        public Purchase Create(PurchaseModel model)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
