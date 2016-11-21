@@ -10,7 +10,7 @@ namespace PhotoShare.DataAccess.DataContext
 {
     public class PhotoShareDbContext : IdentityDbContext<User>
     {
-        public PhotoShareDbContext() : base("DefaultConnection")
+        public PhotoShareDbContext() : base("ExternalConnection")
         {
             //this.Configuration.LazyLoadingEnabled = false;
         }
