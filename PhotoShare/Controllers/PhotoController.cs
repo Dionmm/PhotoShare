@@ -52,19 +52,6 @@ namespace PhotoShare.Controllers
             return Ok(model);
         }
 
-        [Route("ByName/{name}")]
-        public IHttpActionResult GetByName(string name)
-        {
-            var photo = _unitOfWork.Photos.GetPhotoByName(name);
-            if (photo == null)
-            {
-               return NotFound(); 
-            }
-            var model = _modelFactory.Create(photo);
-
-            return Ok(model);
-        }
-
         /*POST Requests*/
 
         /* This is a complete hack due to ASP no longer binding
