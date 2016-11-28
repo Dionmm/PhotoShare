@@ -280,7 +280,8 @@
     <Compile Include="Models\ExifDataModel.cs" />
     <Compile Include="Models\IModelFactory.cs" />
     <Compile Include="Models\ModelFactory.cs" />
-    <Compile Include="Models\PhotoModel.cs" />
+    <Compile Include="Models\PhotoModels\MultiPhotoModel.cs" />
+    <Compile Include="Models\PhotoModels\SinglePhotoModel.cs" />
     <Compile Include="Models\PurchaseModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

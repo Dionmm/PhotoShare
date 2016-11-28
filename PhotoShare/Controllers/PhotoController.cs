@@ -1,22 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Validation;
-using System.Diagnostics;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using MetadataExtractor;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
 using PhotoShare.App_Start;
 using PhotoShare.DataAccess;
 using PhotoShare.DataAccess.DataContext;
 using PhotoShare.DataAccess.Entities;
 using PhotoShare.Models;
+using PhotoShare.Models.PhotoModels;
 
 namespace PhotoShare.Controllers
 {
@@ -40,7 +35,7 @@ namespace PhotoShare.Controllers
         public IHttpActionResult Get()
         {
             var photos = _unitOfWork.Photos.GetAll();
-            var models = photos.Select(_modelFactory.Create);
+            var models = _modelFactory.Create(photos);
 
             return Ok(models);
         }
@@ -163,7 +158,7 @@ namespace PhotoShare.Controllers
 
         [Authorize(Roles = "administrator,photographer")]
         [HttpPut]
-        public IHttpActionResult UpdatePhoto(int id, PhotoModel model)
+        public IHttpActionResult UpdatePhoto(int id, SinglePhotoModel model)
         {
             if (!ModelState.IsValid)
             {

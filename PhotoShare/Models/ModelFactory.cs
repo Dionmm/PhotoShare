@@ -1,26 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using PhotoShare.DataAccess.Entities;
+using PhotoShare.Models.PhotoModels;
 
 namespace PhotoShare.Models
 {
     public class ModelFactory : IModelFactory
     {
-        public PhotoModel Create(Photo photo)
+        public SinglePhotoModel Create(Photo photo)
         {
             ICollection<ExifDataModel> collection = new List<ExifDataModel>();
             if (photo.ExifData != null)
             {
                 foreach (var exif in photo.ExifData)
                 {
-                    collection.Add(this.Create(exif));
+                    collection.Add(Create(exif));
                 }
             }
             
 
-            return new PhotoModel
+            return new SinglePhotoModel
             {
                 Id = photo.Id,
                 Name = photo.Name,
@@ -33,7 +33,7 @@ namespace PhotoShare.Models
             };
         }
 
-        public Photo Create(PhotoModel model, User currentUser)
+        public Photo Create(SinglePhotoModel model, User currentUser)
         {
             return new Photo
             {
@@ -47,6 +47,22 @@ namespace PhotoShare.Models
             };
         }
 
+        public IEnumerable<MultiPhotoModel> Create(IEnumerable<Photo> photos)
+        {
+
+            return photos.Select(n => new MultiPhotoModel
+            {
+                Id = n.Id,
+                Address = n.Address,
+                Name = n.Name,
+                OptimisedAddress = n.OptimisedVersionAddress,
+                Price = n.Price,
+                UserId = n.User.Id,
+                UserName = n.User.UserName,
+                UserFirstName = n.User.FirstName,
+                UserLastName = n.User.LastName
+            });;
+        }
 
         public UserModel Create(User user)
         {

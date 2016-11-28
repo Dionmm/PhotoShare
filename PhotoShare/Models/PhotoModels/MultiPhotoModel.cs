@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
-using PhotoShare.DataAccess.Entities;
 
-namespace PhotoShare.Models
+namespace PhotoShare.Models.PhotoModels
 {
-    public class PhotoModel
+    public class MultiPhotoModel
     {
         [Required]
         [Display(Name = "Id")]
@@ -31,8 +30,10 @@ namespace PhotoShare.Models
         [Display(Name = "UserName")]
         public string UserName { get; set; }
 
-        [Display(Name = "ExifCollection")]
-        public IEnumerable<ExifDataModel> Exif { get; set; }
+        [Display(Name = "User First Name")]
+        public string UserFirstName { get; set; }
 
+        [Display(Name = "User Last Name")]
+        public string UserLastName { get; set; }
     }
 }

@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using PhotoShare.DataAccess.Entities;
+using PhotoShare.Models.PhotoModels;
 
 namespace PhotoShare.Models
 {
     interface IModelFactory
     {
-        PhotoModel Create(Photo photo);
-        Photo Create(PhotoModel model, User currentUser);
+        SinglePhotoModel Create(Photo photo);
+        Photo Create(SinglePhotoModel model, User currentUser);
+        IEnumerable<MultiPhotoModel> Create(IEnumerable<Photo> photos);
         UserModel Create(User user);
         ExifData Create(ExifDataModel model, Photo photo);
         ExifDataModel Create(ExifData exifData);

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using PhotoShare.DataAccess.DataContext;
+﻿using PhotoShare.DataAccess.DataContext;
 using PhotoShare.DataAccess.Repositories;
 using PhotoShare.DataAccess.Repositories.Interfaces;
 
