@@ -50,17 +50,17 @@ namespace PhotoShare.Models
         public IEnumerable<MultiPhotoModel> Create(IEnumerable<Photo> photos)
         {
 
-            return photos.Select(n => new MultiPhotoModel
+            return photos.Select(photo => new MultiPhotoModel
             {
-                Id = n.Id,
-                Address = n.Address,
-                Name = n.Name,
-                OptimisedAddress = n.OptimisedVersionAddress,
-                Price = n.Price,
-                UserId = n.User.Id,
-                UserName = n.User.UserName,
-                UserFirstName = n.User.FirstName,
-                UserLastName = n.User.LastName
+                Id = photo.Id,
+                Address = photo.Address,
+                Name = photo.Name,
+                OptimisedAddress = photo.OptimisedVersionAddress,
+                Price = photo.Price,
+                UserId = photo.User.Id,
+                UserName = photo.User.UserName,
+                UserFirstName = photo.User.FirstName,
+                UserLastName = photo.User.LastName
             });;
         }
 

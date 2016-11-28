@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Web;
 using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage;
@@ -12,27 +13,25 @@ namespace PhotoShare.DataAccess
         private CloudBlobClient _blobClient;
         private readonly CloudBlobContainer _container;
 
-        public BlobHandler()
+        public BlobHandler(string username)
         {
             _storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
 
             _blobClient = _storageAccount.CreateCloudBlobClient();
+
+            _container = _blobClient.GetContainerReference(username.ToLower());
+
+            _container.CreateIfNotExists(BlobContainerPublicAccessType.Blob);
         }
 
-        public string Upload(HttpPostedFile file, string fileName, string username)
+        public string Upload(Stream fileStream, string fileName)
         {
-            //Sets access to read blob only
-            const BlobContainerPublicAccessType publicAccess = BlobContainerPublicAccessType.Blob;
-            var container = _blobClient.GetContainerReference(username.ToLower());
-            
-            container.CreateIfNotExists(publicAccess);
-            
-            var blockBlob = container.GetBlockBlobReference(fileName);
-
             //The file will be corrupted if not read from the beginning
-            file.InputStream.Position = 0;
+            fileStream.Position = 0;
             
-            blockBlob.UploadFromStream(file.InputStream);
+            var blockBlob = _container.GetBlockBlobReference(fileName);
+            
+            blockBlob.UploadFromStream(fileStream);
 
             return blockBlob.Uri.ToString();
         }

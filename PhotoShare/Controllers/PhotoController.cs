@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Web;
 using System.Web.Http;
 using MetadataExtractor;
@@ -12,6 +15,7 @@ using PhotoShare.DataAccess.DataContext;
 using PhotoShare.DataAccess.Entities;
 using PhotoShare.Models;
 using PhotoShare.Models.PhotoModels;
+using Directory = MetadataExtractor.Directory;
 
 namespace PhotoShare.Controllers
 {
@@ -69,76 +73,91 @@ namespace PhotoShare.Controllers
         [HttpPost]
         public IHttpActionResult AddPhotoFile()
         {
-            if (HttpContext.Current.Request.Files.Count <= 0)
+
+            
+
+            HttpPostedFile file;
+            try
+            {
+                using (var fileStream = HttpContext.Current.Request.Files[0].InputStream)
+                {
+                    var fileName = HttpContext.Current.Request.Files[0].FileName;
+                    User currentUser = _userManager.FindById(User.Identity.GetUserId());
+
+                    if (currentUser == null)
+                    {
+                        return InternalServerError();
+                    }
+                    
+
+                    var blobHandler = new BlobHandler(currentUser.UserName);
+
+                    //Reads the meta data attached to the photo.
+                    //This must go after the blob upload as this appears to alter the file input stream
+                    IEnumerable<Directory> directories = ImageMetadataReader.ReadMetadata(fileStream);
+
+                    //Creates an optimised thumbnail for the image
+                    var thumbnail = CreateThumbnail(fileStream);
+
+                    //Generates a GUID + file extension to be used as the blobName
+                    var blobName = CreateBlobName(fileName);
+
+
+                    //Uploads photo adn thumbnail to the user's container and returns the uris
+                    var uri = blobHandler.Upload(fileStream, blobName["Original"]);
+                    var thumbNailUri = blobHandler.Upload(thumbnail, blobName["Thumbnail"]);
+
+
+                    //Removes the file extension from the fileName. This
+                    //photoName is then used when creating the photo below
+                    var photoName = RemoveFileExtension(fileName);
+
+
+                    //Add the Photo to DB
+                    //Doesn't use ModelFactory because i would need to create a new PhotoModel anyway
+                    //which is similarly slow and messy
+                    var photo = new Photo
+                    {
+                        Name = photoName,
+                        Address = uri,
+                        OptimisedVersionAddress = thumbNailUri,
+                        User = currentUser,
+                        CreatedDateTime = DateTime.Now,
+                        UpdatedDateTime = DateTime.Now
+                    };
+                    _unitOfWork.Photos.Add(photo);
+
+                    //Extracts the metadata for the photo and 
+                    //creates a new ExifData for each, then saved
+                    //to DB
+                    foreach (var directory in directories)
+                    {
+                        foreach (var tag in directory.Tags)
+                        {
+                            var exifModel = new ExifDataModel
+                            {
+                                Name = tag.Name,
+                                Value = tag.Description
+                            };
+                            _unitOfWork.ExifData.Add(_modelFactory.Create(exifModel, photo));
+                        }
+                    }
+
+
+                    if (_unitOfWork.Save() == 0)
+                    {
+                        return InternalServerError();
+                    }
+
+                    var model = _modelFactory.Create(photo);
+
+                    return Ok(model);
+                }
+            }
+            catch (Exception)
             {
                 return BadRequest();
             }
-
-            User currentUser = _userManager.FindById(User.Identity.GetUserId());
-            if (currentUser == null)
-            {
-                return InternalServerError();
-            }
-
-            var file = HttpContext.Current.Request.Files[0];
-            var blobHandler = new BlobHandler();
-
-            //Reads the meta data attached to the photo.
-            //This must go after the blob upload as this appears to alter the file input stream
-            IEnumerable<Directory> directories = ImageMetadataReader.ReadMetadata(file.InputStream);
-            
-
-            //Generates a GUID + file extension to be used as the blobName
-            var blobName = CreateBlobName(file.FileName);
-
-            //Uploads photo to the user's container and returns the uri of the uploaded photo
-            var uri = blobHandler.Upload(file, blobName, currentUser.UserName);
-
-            
-
-            //Removes the file extension from the fileName. This
-            //photoName is then used when creating the photo below
-            var photoName = RemoveFileExtension(file.FileName);
-
-            //Add the Photo to DB
-            //Doesn't use ModelFactory because i would need to create a new PhotoModel anyway
-            //which is similarly slow and messy
-            var photo = new Photo
-            {
-                Name = photoName,
-                Address = uri,
-                OptimisedVersionAddress = uri, //Temporary until images can be optimised
-                User = currentUser,
-                CreatedDateTime = DateTime.Now,
-                UpdatedDateTime = DateTime.Now
-            };
-            _unitOfWork.Photos.Add(photo);
-
-            //Extracts the metadata for the photo and 
-            //creates a new ExifData for each, then saved
-            //to DB
-            foreach (var directory in directories)
-            {
-                foreach (var tag in directory.Tags)
-                {
-                    var exifModel = new ExifDataModel
-                    {
-                        Name = tag.Name,
-                        Value = tag.Description
-                    };
-                    _unitOfWork.ExifData.Add(_modelFactory.Create(exifModel, photo));
-                }
-            }
-            
-            
-            if (_unitOfWork.Save() == 0)
-            {
-                return InternalServerError();
-            }
-
-            var model = _modelFactory.Create(photo);
-
-            return Ok(model);
         }
 
         /*PUT Requests*/
@@ -209,15 +228,73 @@ namespace PhotoShare.Controllers
 
         private static string RemoveFileExtension(string fileName)
         {
-            return System.IO.Path.GetFileNameWithoutExtension(fileName);
+            return Path.GetFileNameWithoutExtension(fileName);
         }
 
-        private static string CreateBlobName(string fileName)
+        private static IDictionary<string, string> CreateBlobName(string fileName)
         {
-            string extension = System.IO.Path.GetExtension(fileName);
-            return Guid.NewGuid() + extension;
+            string extension = Path.GetExtension(fileName);
+            var guid = Guid.NewGuid();
+            return new Dictionary<string, string>
+            {
+                {"Original", $"{guid}{extension}"},
+                {"Thumbnail", $"{guid}-thumbnail{extension}"}
+            };
         }
-        
+
+        private static Stream CreateThumbnail(Stream fileStream)
+        {
+            //The file will be corrupted if not read from the beginning
+            fileStream.Position = 0;
+            using (var image = Image.FromStream(fileStream))
+            {
+                Stream outputStream = new MemoryStream();
+                double width;
+                double height;
+
+                if (image.Width > image.Height)
+                {
+                    width = 500;
+                    var ratio = image.Width / width;
+                    height = image.Height / ratio;
+                }
+                else
+                {
+                    height = 500;
+                    var ratio = image.Height / height;
+                    width = image.Width / ratio;
+                }
+
+                var newImage = new Bitmap(Convert.ToInt32(width), Convert.ToInt32(height));
+                var rectangle = new Rectangle(0, 0, Convert.ToInt32(width), Convert.ToInt32(height));
+
+                using (var graphics = Graphics.FromImage(newImage))
+                {
+                    graphics.CompositingQuality = CompositingQuality.HighQuality;
+                    graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    graphics.SmoothingMode = SmoothingMode.HighQuality;
+                    graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                    
+                    graphics.DrawImage(image, rectangle, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel);
+                }
+                ImageCodecInfo[] encoders = ImageCodecInfo.GetImageEncoders();
+
+                foreach (var codec in encoders)
+                {
+                    if (codec.MimeType != "image/jpeg") continue;
+
+                    var encoderParameters = new EncoderParameters
+                    {
+                        Param = { [0] = new EncoderParameter(Encoder.Quality, 90L) }
+                    };
+
+                    newImage.Save(outputStream, codec, encoderParameters);
+                }
+
+                return outputStream;
+            }
+        }
+
         #endregion
     }
 }
