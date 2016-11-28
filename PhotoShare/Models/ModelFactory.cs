@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using PhotoShare.App_Start;
 using PhotoShare.DataAccess.Entities;
+using PhotoShare.Models.AdminModels;
 using PhotoShare.Models.PhotoModels;
 
 namespace PhotoShare.Models
@@ -75,7 +80,24 @@ namespace PhotoShare.Models
                 ProfilePhoto = user.ProfilePhoto
             };
         }
+        public IEnumerable<AdminUserModel> Create(IEnumerable<User> users)
+        {
 
+            return users.Select(user => new AdminUserModel
+            {
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                ProfilePhoto = user.ProfilePhoto,
+                EmailConfirmed = user.EmailConfirmed,
+                PhoneNumberConfirmed = user.PhoneNumberConfirmed,
+                TwoFactorEnabled = user.TwoFactorEnabled,
+                LockoutEnabled = user.LockoutEnabled,
+                AccessFailedCount = user.AccessFailedCount.ToString(),
+                AwaitingAdminConfirmation = user.AwaitingAdminConfirmation.ToString(),
+                Role = GetUserRoles(user.Id)
+            });
+        }
 
         public ExifData Create(ExifDataModel model, Photo photo)
         {
@@ -102,5 +124,33 @@ namespace PhotoShare.Models
         {
             throw new NotImplementedException();
         }
+
+
+        #region helpers
+
+        private UserManager<User> _userManager;
+        public UserManager<User> UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.Current.Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
+
+
+        private string GetUserRoles(string id)
+        {
+            //There should only ever be one role because
+            //this is my app and I designed it that way
+            return UserManager.GetRoles(id).FirstOrDefault() ?? "shopper";
+        }
+
+        #endregion
+
+
     }
 }

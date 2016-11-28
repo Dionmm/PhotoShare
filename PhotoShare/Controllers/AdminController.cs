@@ -1,10 +1,10 @@
 ﻿using System.Linq;
+using System.Net.Http;
 using System.Web.Http;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using PhotoShare.App_Start;
 using PhotoShare.DataAccess;
 using PhotoShare.DataAccess.DataContext;
-using PhotoShare.DataAccess.Entities;
 using PhotoShare.Models;
 
 namespace PhotoShare.Controllers
@@ -15,21 +15,32 @@ namespace PhotoShare.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly PhotoShareDbContext _context = new PhotoShareDbContext();
-        private readonly ApplicationUserManager _userManager;
+        private ApplicationUserManager _userManager;
         private readonly IModelFactory _modelFactory;
 
         public AdminController()
         {
             _unitOfWork = new UnitOfWork(_context);
-            _userManager = new ApplicationUserManager(new UserStore<User>(_context));
             _modelFactory = new ModelFactory();
+        }
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
         }
 
         public IHttpActionResult Get()
         {
-            var users = _userManager.Users.ToList();
-            var userModels = users.Select(_modelFactory.Create);
-            
+            var users = UserManager.Users.ToList();
+            var userModels = _modelFactory.Create(users);
+
             return Ok(userModels);
         }
 
