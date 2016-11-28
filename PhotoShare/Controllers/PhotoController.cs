@@ -91,8 +91,8 @@ namespace PhotoShare.Controllers
             //Generates a GUID + file extension to be used as the blobName
             var blobName = CreateBlobName(file.FileName);
 
-            //Uploads photo and returns the uri of the uploaded photo
-            var uri = blobHandler.Upload(file, blobName);
+            //Uploads photo to the user's container and returns the uri of the uploaded photo
+            var uri = blobHandler.Upload(file, blobName, currentUser.UserName);
 
             
 
