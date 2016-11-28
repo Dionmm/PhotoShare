@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.EnterpriseServices;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -57,7 +58,12 @@ namespace PhotoShare.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new User() { UserName = model.UserName, Email = model.Email, PhoneNumber = model.PhoneNumber};
+            //Check if the user wants to be registered as a photographer
+            //users must wait on admin confirmation before being assigned
+            //photographer role
+            bool awaitingAdminConfirmation = model.Photographer == "true";
+            
+            var user = new User() { UserName = model.UserName, Email = model.Email, PhoneNumber = model.PhoneNumber, AwaitingAdminConfirmation = awaitingAdminConfirmation };
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 

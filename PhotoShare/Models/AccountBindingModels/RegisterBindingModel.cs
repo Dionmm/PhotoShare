@@ -30,5 +30,8 @@ namespace PhotoShare.Models.AccountBindingModels
         [Display(Name = "Phone number")]
         [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }
+
+        [Display(Name = "Photographer")]
+        public string Photographer { get; set; }
     }
 }

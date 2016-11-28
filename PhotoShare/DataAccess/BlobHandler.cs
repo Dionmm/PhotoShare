@@ -32,6 +32,9 @@ namespace PhotoShare.DataAccess
             // Retrieve reference to a blob named "myblob".
             CloudBlockBlob blockBlob = _container.GetBlockBlobReference(fileName);
 
+            //The file will be corrupted if not read from the beginning
+            file.InputStream.Position = 0;
+
             // Create or overwrite the "myblob" blob with contents from a local file.
             blockBlob.UploadFromStream(file.InputStream);
 

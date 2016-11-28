@@ -100,8 +100,11 @@ namespace PhotoShare.Controllers
 
             var file = HttpContext.Current.Request.Files[0];
             var blobHandler = new BlobHandler();
-            IEnumerable<Directory> directories = ImageMetadataReader.ReadMetadata(file.InputStream);
 
+            //Reads the meta data attached to the photo.
+            //This must go after the blob upload as this appears to alter the file input stream
+            IEnumerable<Directory> directories = ImageMetadataReader.ReadMetadata(file.InputStream);
+            
 
             //Generates a GUID + file extension to be used as the blobName
             var blobName = CreateBlobName(file.FileName);
@@ -109,6 +112,7 @@ namespace PhotoShare.Controllers
             //Uploads photo and returns the uri of the uploaded photo
             var uri = blobHandler.Upload(file, blobName);
 
+            
 
             //Removes the file extension from the fileName. This
             //photoName is then used when creating the photo below
