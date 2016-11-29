@@ -16,6 +16,11 @@ namespace PhotoShare
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+            config.Routes.MapHttpRoute(
+                name:"Other",
+                routeTemplate: "{*anything}",
+                defaults: new {controller = "Home", action = "Index"}
+            );
         }
     }
 }

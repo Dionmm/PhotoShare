@@ -246,3 +246,5 @@ ModelManifest.xml
 
 #Web.config to prevent leaking DB connection details
 web.config
+/PhotoShare/App
+/PhotoShare/index.html

@@ -116,6 +116,10 @@
       <HintPath>..\packages\Microsoft.Owin.Cors.3.0.1\lib\net45\Microsoft.Owin.Cors.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Owin.FileSystems, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.FileSystems.3.0.1\lib\net45\Microsoft.Owin.FileSystems.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
       <Private>True</Private>
@@ -130,6 +134,10 @@
     </Reference>
     <Reference Include="Microsoft.Owin.Security.OAuth, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Security.OAuth.2.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.StaticFiles, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.StaticFiles.3.0.1\lib\net45\Microsoft.Owin.StaticFiles.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -202,12 +210,72 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App\app.js" />
+    <Content Include="App\css\style.css" />
+    <Content Include="App\home\home.controller.js" />
+    <Content Include="App\home\home.html" />
+    <Content Include="App\images\hero.jpg" />
+    <Content Include="App\layout\header.html" />
+    <Content Include="App\layout\shell.controller.js" />
+    <Content Include="App\layout\shell.html" />
+    <Content Include="App\login\login.controller.js" />
+    <Content Include="App\login\login.html" />
+    <Content Include="App\photo\photo.controller.js" />
+    <Content Include="App\photo\photo.html" />
+    <Content Include="App\purchase\purchase.controller.js" />
+    <Content Include="App\purchase\purchase.html" />
+    <Content Include="App\services\data.service.js" />
+    <Content Include="App\upload\upload.controller.js" />
+    <Content Include="App\upload\upload.html" />
+    <Content Include="index.html" />
     <Content Include="Global.asax" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />
     <Content Include="Scripts\jquery-1.6.4.min.js" />
     <Content Include="Scripts\jquery.signalR-2.2.1.js" />
     <Content Include="Scripts\jquery.signalR-2.2.1.min.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\dist\angular-file-upload.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\dist\angular-file-upload.min.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\examples\console-sham.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\examples\console-sham.min.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\examples\image-preview\controllers.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\examples\image-preview\directives.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\examples\image-preview\index.html" />
+    <Content Include="Scripts\node_modules\angular-file-upload\examples\image-preview\upload.php" />
+    <Content Include="Scripts\node_modules\angular-file-upload\examples\image-preview\uploads\gap.txt" />
+    <Content Include="Scripts\node_modules\angular-file-upload\examples\simple\controllers.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\examples\simple\index.html" />
+    <Content Include="Scripts\node_modules\angular-file-upload\examples\simple\upload.php" />
+    <Content Include="Scripts\node_modules\angular-file-upload\examples\simple\uploads\gap.txt" />
+    <Content Include="Scripts\node_modules\angular-file-upload\examples\without-bootstrap\controllers.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\examples\without-bootstrap\directives.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\examples\without-bootstrap\index.html" />
+    <Content Include="Scripts\node_modules\angular-file-upload\examples\without-bootstrap\style.css" />
+    <Content Include="Scripts\node_modules\angular-file-upload\examples\without-bootstrap\upload.php" />
+    <Content Include="Scripts\node_modules\angular-file-upload\examples\without-bootstrap\uploads\gap.txt" />
+    <Content Include="Scripts\node_modules\angular-file-upload\gulpfile.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\license.txt" />
+    <Content Include="Scripts\node_modules\angular-file-upload\src\directives\FileDrop.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\src\directives\FileOver.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\src\directives\FileSelect.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\src\index.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\src\services\FileDirective.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\src\services\FileDrop.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\src\services\FileItem.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\src\services\FileLikeObject.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\src\services\FileOver.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\src\services\FileSelect.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\src\services\FileUploader.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\src\services\Pipeline.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\src\values\options.js" />
+    <Content Include="Scripts\node_modules\angular-file-upload\WebpackConfig.js" />
+    <Content Include="Scripts\node_modules\angular-route\angular-route.js" />
+    <Content Include="Scripts\node_modules\angular-route\angular-route.min.js" />
+    <Content Include="Scripts\node_modules\angular-route\index.js" />
+    <Content Include="Scripts\node_modules\angular\angular-csp.css" />
+    <Content Include="Scripts\node_modules\angular\angular.js" />
+    <Content Include="Scripts\node_modules\angular\angular.min.js" />
+    <Content Include="Scripts\node_modules\angular\index.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -215,6 +283,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PhotoController.cs" />
     <Compile Include="Controllers\PurchaseController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -292,6 +361,26 @@
     <Content Include="packages.config" />
     <None Include="Properties\PublishProfiles\PhotoShare20161101021456.pubxml" />
     <None Include="Properties\PublishProfiles\testingASPNET - Web Deploy.pubxml" />
+    <Content Include="Scripts\node_modules\angular-file-upload\.babelrc" />
+    <Content Include="Scripts\node_modules\angular-file-upload\.jshintrc" />
+    <Content Include="Scripts\node_modules\angular-file-upload\.npmignore" />
+    <Content Include="Scripts\node_modules\angular-file-upload\bower.json" />
+    <Content Include="Scripts\node_modules\angular-file-upload\dist\angular-file-upload.js.map" />
+    <Content Include="Scripts\node_modules\angular-file-upload\dist\angular-file-upload.min.js.map" />
+    <Content Include="Scripts\node_modules\angular-file-upload\package.json" />
+    <Content Include="Scripts\node_modules\angular-file-upload\README.md" />
+    <Content Include="Scripts\node_modules\angular-file-upload\src\config.json" />
+    <Content Include="Scripts\node_modules\angular-route\angular-route.min.js.map" />
+    <Content Include="Scripts\node_modules\angular-route\bower.json" />
+    <Content Include="Scripts\node_modules\angular-route\LICENSE.md" />
+    <Content Include="Scripts\node_modules\angular-route\package.json" />
+    <Content Include="Scripts\node_modules\angular-route\README.md" />
+    <Content Include="Scripts\node_modules\angular\angular.min.js.gzip" />
+    <Content Include="Scripts\node_modules\angular\angular.min.js.map" />
+    <Content Include="Scripts\node_modules\angular\bower.json" />
+    <Content Include="Scripts\node_modules\angular\LICENSE.md" />
+    <Content Include="Scripts\node_modules\angular\package.json" />
+    <Content Include="Scripts\node_modules\angular\README.md" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
