@@ -100,8 +100,7 @@ namespace PhotoShare.Controllers
 
                     var blobHandler = new BlobHandler(currentUser.UserName);
 
-                    //Reads the meta data attached to the photo.
-                    //This must go after the blob upload as this appears to alter the file input stream
+                    //Reads the meta data attached to the photo
                     IEnumerable<Directory> directories = ImageMetadataReader.ReadMetadata(fileStream);
 
                     //Creates an optimised thumbnail for the image

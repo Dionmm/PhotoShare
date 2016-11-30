@@ -211,6 +211,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App\app.js" />
+    <Content Include="App\chat\chat.controller.js" />
+    <Content Include="App\chat\chat.html" />
     <Content Include="App\css\style.css" />
     <Content Include="App\home\home.controller.js" />
     <Content Include="App\home\home.html" />
@@ -234,6 +236,9 @@
     <Content Include="Scripts\jquery-1.6.4.min.js" />
     <Content Include="Scripts\jquery.signalR-2.2.1.js" />
     <Content Include="Scripts\jquery.signalR-2.2.1.min.js" />
+    <Content Include="Scripts\node_modules\angular-cookies\angular-cookies.js" />
+    <Content Include="Scripts\node_modules\angular-cookies\angular-cookies.min.js" />
+    <Content Include="Scripts\node_modules\angular-cookies\index.js" />
     <Content Include="Scripts\node_modules\angular-file-upload\dist\angular-file-upload.js" />
     <Content Include="Scripts\node_modules\angular-file-upload\dist\angular-file-upload.min.js" />
     <Content Include="Scripts\node_modules\angular-file-upload\examples\console-sham.js" />
@@ -355,6 +360,7 @@
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
+    <Compile Include="Providers\OwinMiddleWareQueryStringExtractor.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -381,6 +387,11 @@
     <Content Include="Scripts\node_modules\angular\LICENSE.md" />
     <Content Include="Scripts\node_modules\angular\package.json" />
     <Content Include="Scripts\node_modules\angular\README.md" />
+    <Content Include="Scripts\node_modules\angular-cookies\angular-cookies.min.js.map" />
+    <Content Include="Scripts\node_modules\angular-cookies\bower.json" />
+    <Content Include="Scripts\node_modules\angular-cookies\LICENSE.md" />
+    <Content Include="Scripts\node_modules\angular-cookies\package.json" />
+    <Content Include="Scripts\node_modules\angular-cookies\README.md" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
