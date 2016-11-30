@@ -27,12 +27,10 @@ namespace PhotoShare.Hubs
         private PhotoShareDbContext _context = new PhotoShareDbContext();
         private IUnitOfWork _unitOfWork;
         private IModelFactory _modelFactory = new ModelFactory();
+
         public ApplicationUserManager UserManager
         {
-            get
-            {
-                return _userManager ?? new ApplicationUserManager(new UserStore<User>(_context));
-            }
+            get { return _userManager ?? new ApplicationUserManager(new UserStore<User>(_context)); }
             set { _userManager = value; }
         }
 
@@ -68,12 +66,27 @@ namespace PhotoShare.Hubs
 
                 throw;
             }
-            
+
             return base.OnConnected();
         }
 
         public override Task OnDisconnected(bool stopCalled)
         {
+            try
+            {
+                var username = Context.User.Identity.Name;
+                if (username != null)
+                {
+                    CurrentUser = UserManager.FindByName(username);
+
+                    Clients.All.addNewMessage("Server", $"{CurrentUser.UserName} has left the chat");
+                }
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
             return base.OnDisconnected(stopCalled);
         }
 
@@ -105,11 +118,6 @@ namespace PhotoShare.Hubs
                     if (_unitOfWork.Save() == 0)
                     {
                         Clients.All.error("Something went wrong");
-                    }
-                    else
-                    {
-                        Clients.All.error("Message saved");
-
                     }
 
                 }

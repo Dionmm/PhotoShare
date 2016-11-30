@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Http;
 using MetadataExtractor;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using PhotoShare.App_Start;
 using PhotoShare.DataAccess;
@@ -25,16 +26,17 @@ namespace PhotoShare.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly PhotoShareDbContext _context = new PhotoShareDbContext();
-        private ApplicationUserManager _userManager;
+        private readonly ApplicationUserManager _userManager;
         private readonly IModelFactory _modelFactory;
 
         public PhotoController()
         {
             _unitOfWork = new UnitOfWork(_context);
+            _userManager = new ApplicationUserManager(new UserStore<User>(_context));
             _modelFactory = new ModelFactory();
         }
 
-        public ApplicationUserManager UserManager
+        /*public ApplicationUserManager UserManager
         {
             get
             {
@@ -44,7 +46,7 @@ namespace PhotoShare.Controllers
             {
                 _userManager = value;
             }
-        }
+        }*/
 
         /*GET Requests*/
 
@@ -99,7 +101,7 @@ namespace PhotoShare.Controllers
                 using (var fileStream = HttpContext.Current.Request.Files[0].InputStream)
                 {
                     var fileName = HttpContext.Current.Request.Files[0].FileName;
-                    User currentUser = UserManager.FindById(User.Identity.GetUserId());
+                    User currentUser = _userManager.FindById(User.Identity.GetUserId());
 
                     if (currentUser == null)
                     {
@@ -172,6 +174,7 @@ namespace PhotoShare.Controllers
             }
             catch (Exception)
             {
+                throw;
                 return BadRequest();
             }
         }

@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using PhotoShare.App_Start;
 using PhotoShare.DataAccess;
@@ -19,16 +20,17 @@ namespace PhotoShare.Controllers
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly PhotoShareDbContext _context = new PhotoShareDbContext();
-        private ApplicationUserManager _userManager;
+        private readonly ApplicationUserManager _userManager;
         private readonly IModelFactory _modelFactory;
 
         public PurchaseController()
         {
             _unitOfWork = new UnitOfWork(_context);
+            _userManager = new ApplicationUserManager(new UserStore<User>(_context));
             _modelFactory = new ModelFactory();
         }
 
-        public ApplicationUserManager UserManager
+        /*public ApplicationUserManager UserManager
         {
             get
             {
@@ -38,7 +40,7 @@ namespace PhotoShare.Controllers
             {
                 _userManager = value;
             }
-        }
+        }*/
 
         [HttpPost]
         public IHttpActionResult PurchasePhoto(int id, PurchaseModel model)
@@ -53,7 +55,7 @@ namespace PhotoShare.Controllers
                 return NotFound();
             }
 
-            var currentUser = UserManager.FindById(User.Identity.GetUserId());
+            var currentUser = _userManager.FindById(User.Identity.GetUserId());
             if (currentUser == null)
             {
                 return InternalServerError();
