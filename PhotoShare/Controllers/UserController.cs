@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using PhotoShare.App_Start;
 using PhotoShare.DataAccess.Entities;
+using PhotoShare.EmailProvider;
 using PhotoShare.Models;
 using PhotoShare.Models.AccountBindingModels;
 
@@ -67,7 +68,14 @@ namespace PhotoShare.Controllers
                 return GetErrorResult(result);
             }
 
-            return Ok();
+            var email = new Email
+            {
+                ConfirmationCode = UserManager.GenerateEmailConfirmationToken(user.Id),
+                Recipient = user.Email
+            };
+
+            await email.Send();
+            return Ok("Email sent");
         }
 
         [Route("ChangePassword")]
@@ -85,6 +93,18 @@ namespace PhotoShare.Controllers
                 return GetErrorResult(result);
             }
 
+            return Ok();
+        }
+
+        [Route("EmailConfirm")]
+        public IHttpActionResult EmailConfirm(string code)
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            var result = UserManager.ConfirmEmail(user.Id, code);
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors.ToString());
+            }
             return Ok();
         }
 
