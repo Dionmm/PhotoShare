@@ -68,6 +68,15 @@ namespace PhotoShare.Controllers
             return Ok(model);
         }
 
+        [Route("MostRecent")]
+        public IHttpActionResult GetMostRecent(int count, int page = 0)
+        {
+            var photos = _unitOfWork.Photos.GetMostRecentPhotos(count, page);
+            var models = _modelFactory.Create(photos);
+
+            return Ok(models);
+        }
+
         /*POST Requests*/
 
         /* This is a complete hack due to ASP no longer binding

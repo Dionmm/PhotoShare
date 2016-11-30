@@ -13,9 +13,10 @@ namespace PhotoShare.DataAccess.Repositories
         {
         }
 
-        public IEnumerable<Photo> GetMostRecentPhotos(int count)
+        public IEnumerable<Photo> GetMostRecentPhotos(int count, int page)
         {
-            return Context.Photos.OrderByDescending(x => x.CreatedDateTime).Take(count).ToList();
+            var skipRows = page*count;
+            return Context.Photos.OrderByDescending(x => x.CreatedDateTime).Skip(skipRows).Take(count).ToList();
         }
     }
 }

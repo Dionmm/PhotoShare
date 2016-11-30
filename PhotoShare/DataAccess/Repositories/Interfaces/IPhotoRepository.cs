@@ -5,6 +5,6 @@ namespace PhotoShare.DataAccess.Repositories.Interfaces
 {
     public interface IPhotoRepository : IRepository<Photo>
     {
-        IEnumerable<Photo> GetMostRecentPhotos(int count);
+        IEnumerable<Photo> GetMostRecentPhotos(int count, int page);
     }
 }
