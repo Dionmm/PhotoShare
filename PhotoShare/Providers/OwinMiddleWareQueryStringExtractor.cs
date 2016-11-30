@@ -24,10 +24,10 @@ namespace PhotoShare.Providers
 
             if (context.Request.Path.Value.StartsWith("/signalr"))
             {
-                string bearerToken = context.Request.Query.Get("bearer_token");
-                var x = context;
-                var um = HttpContext.Current.Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
-                if (bearerToken != null)
+                string bearerToken = context.Request.Query.Get("bearerToken");
+
+                //Querystring is set as undefined if not found in localStorage
+                if (bearerToken != null && bearerToken != "undefined")
                 {
                     var tk = Startup.OAuthOptions.AccessTokenFormat.Unprotect(bearerToken);
                     var principal = new ClaimsPrincipal(tk.Identity);

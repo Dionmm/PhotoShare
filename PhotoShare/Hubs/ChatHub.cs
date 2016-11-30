@@ -10,7 +10,7 @@ using PhotoShare.DataAccess.Entities;
 
 namespace PhotoShare.Hubs
 {
-    //[Authorize]
+    [Authorize]
     public class ChatHub : Hub
     {
         private ApplicationUserManager _userManager;
