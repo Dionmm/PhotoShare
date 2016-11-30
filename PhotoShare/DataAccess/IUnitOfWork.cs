@@ -8,6 +8,7 @@ namespace PhotoShare.DataAccess
         IPhotoRepository Photos { get; }
         IExifDataRepository ExifData { get; }
         IPurchaseRepository Purchases { get; }
+        IMessageRepository Messages { get; }
         int Save();
     }
 }

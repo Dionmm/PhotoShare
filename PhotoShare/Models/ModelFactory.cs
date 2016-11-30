@@ -125,6 +125,14 @@ namespace PhotoShare.Models
             throw new NotImplementedException();
         }
 
+        public MessageModel Create(Message message)
+        {
+            return new MessageModel
+            {
+                Content = message.Content,
+                UserName = message.User.UserName
+            };
+        }
 
         #region helpers
 

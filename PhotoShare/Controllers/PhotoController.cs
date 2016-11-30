@@ -209,10 +209,13 @@ namespace PhotoShare.Controllers
                     _unitOfWork.ExifData.Add(exifData);
                 }
             }
-            
 
-            _unitOfWork.Save();
-            
+
+            if (_unitOfWork.Save() == 0)
+            {
+                return InternalServerError();
+            }
+
             return Ok("Photo Updated");
         }
 
