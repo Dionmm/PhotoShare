@@ -69,9 +69,9 @@ namespace PhotoShare.Controllers
         }
 
         [Route("MostRecent")]
-        public IHttpActionResult GetMostRecent(int count, int page = 0)
+        public IHttpActionResult GetMostRecent(int pageSize, int page = 0)
         {
-            var photos = _unitOfWork.Photos.GetMostRecentPhotos(count, page);
+            var photos = _unitOfWork.Photos.GetMostRecentPhotos(pageSize, page);
             var models = _modelFactory.Create(photos);
 
             return Ok(models);
