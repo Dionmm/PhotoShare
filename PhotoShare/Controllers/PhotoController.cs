@@ -208,7 +208,9 @@ namespace PhotoShare.Controllers
             {
                 photo.Price = model.Price;
             }
+
             photo.UpdatedDateTime = DateTime.Now;
+
             if (model.Exif != null)
             {
                 foreach (var exifModel in model.Exif)
@@ -223,8 +225,8 @@ namespace PhotoShare.Controllers
             {
                 return InternalServerError();
             }
-
-            return Ok("Photo Updated");
+            var returnModel = _modelFactory.Create(photo);
+            return Ok(returnModel);
         }
 
         /*DELETE Requests*/
