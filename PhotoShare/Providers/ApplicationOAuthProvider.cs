@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.Owin;
@@ -38,12 +39,13 @@ namespace PhotoShare.Providers
 
             //If user.FirstName is null an exception will be thrown as user.FirstName needs to
             //be returned in CreateProperties() at the bottom of this file
-            string firstName = user.FirstName != null ? user.FirstName : user.UserName;
+            string firstName = user.FirstName ?? user.UserName;
+            var role = await userManager.GetRolesAsync(user.Id);
 
             ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager,
                OAuthDefaults.AuthenticationType);
 
-            AuthenticationProperties properties = CreateProperties(user.UserName, firstName);
+            AuthenticationProperties properties = CreateProperties(user.UserName, firstName, role.First());
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);
         }
@@ -84,12 +86,13 @@ namespace PhotoShare.Providers
             return Task.FromResult<object>(null);
         }
 
-        public static AuthenticationProperties CreateProperties(string userName, string firstName)
+        public static AuthenticationProperties CreateProperties(string userName, string firstName, string role)
         {
             IDictionary<string, string> data = new Dictionary<string, string>
             {
                 { "userName", userName },
-                { "firstName", firstName }
+                { "firstName", firstName },
+                { "role", role }
             };
             return new AuthenticationProperties(data);
         }

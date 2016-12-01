@@ -68,6 +68,8 @@ namespace PhotoShare.Controllers
                 return GetErrorResult(result);
             }
 
+            await UserManager.AddToRoleAsync(user.Id, "shopper");
+
             var email = new Email
             {
                 ConfirmationCode = UserManager.GenerateEmailConfirmationToken(user.Id),

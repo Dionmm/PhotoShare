@@ -110,8 +110,10 @@ namespace PhotoShare.Migrations
             const string administrator = "administrator";
             const string photographer = "photographer";
 
+
             /*AddRole(context, administrator);
             AddRole(context, photographer);
+            AddRole(context, "shopper");
             AddUser(context, dion, "password", administrator);
             AddUser(context, jack, "password", photographer);
             AddMessage(context, dion, "Testing messages");
