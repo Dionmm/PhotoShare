@@ -200,9 +200,14 @@ namespace PhotoShare.Controllers
             {
                 return NotFound();
             }
-
-            photo.Name = model.Name;
-            photo.Price = model.Price;
+            if (model.Name != null && model.Name.Length <= 20 && model.Name.Length != 0 && model.Name != "undefined")
+            {
+                photo.Name = model.Name;
+            }
+            if (model.Price >= 0)
+            {
+                photo.Price = model.Price;
+            }
             photo.UpdatedDateTime = DateTime.Now;
             if (model.Exif != null)
             {
