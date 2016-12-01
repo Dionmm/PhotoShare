@@ -51,7 +51,7 @@ namespace PhotoShare.Hubs
                     CurrentUser = UserManager.FindByName(username);
                     var messages = _unitOfWork.Messages.GetMostRecentMessages(10);
                     var models = messages.Select(_modelFactory.Create);
-                    Clients.All.addMessages(models);
+                    Clients.Caller.loadMessages(models);
                     Clients.All.addNewMessage("Server", $"{CurrentUser.UserName} has joined the chat");
                 }
                 else
@@ -92,6 +92,31 @@ namespace PhotoShare.Hubs
 
         public override Task OnReconnected()
         {
+            try
+            {
+                var username = Context.User.Identity.Name;
+                if (username != null)
+                {
+                    _unitOfWork = new UnitOfWork(_context);
+                    CurrentUser = UserManager.FindByName(username);
+                    var messages = _unitOfWork.Messages.GetMostRecentMessages(10);
+                    var models = messages.Select(_modelFactory.Create);
+                    Clients.Caller.loadMessages(models);
+                    Clients.All.addNewMessage("Server", $"{CurrentUser.UserName} has reconnected");
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("No username");
+                    Clients.Caller.error("Username not found");
+                }
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
             return base.OnReconnected();
         }
 
