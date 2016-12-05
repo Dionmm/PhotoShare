@@ -245,6 +245,7 @@
     <Content Include="App\login\login.html" />
     <Content Include="App\photo\photo.controller.js" />
     <Content Include="App\photo\photo.html" />
+    <Content Include="App\profile\editProfile.controller.js" />
     <Content Include="App\profile\editProfile.html" />
     <Content Include="App\profile\profile.controller.js" />
     <Content Include="App\profile\profile.html" />
@@ -437,6 +438,7 @@
       <DependentUpon>201612051154340_AddedBackgroundPhoto.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AccountBindingModels\ChangeDescriptionBindingModel.cs" />
     <Compile Include="Models\AccountBindingModels\ChangeEmailBindingModel.cs" />
     <Compile Include="Models\AccountBindingModels\ChangeNameBindingModel.cs" />
     <Compile Include="Models\AccountBindingModels\ChangePasswordBindingModel.cs" />

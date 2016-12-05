@@ -6,14 +6,10 @@ using System.Web;
 
 namespace PhotoShare.Models.AccountBindingModels
 {
-    public class ChangeNameBindingModel
+    public class ChangeDescriptionBindingModel
     {
         [Required]
-
-        public string FirstName { get; set; }
-
-        [Required]
-
-        public string LastName { get; set; }
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 2)]
+        public string Description { get; set; }
     }
 }

@@ -183,6 +183,26 @@ namespace PhotoShare.Controllers
             return Ok();
         }
 
+        [Route("ChangeDescription")]
+        public async Task<IHttpActionResult> ChangeDescription(ChangeDescriptionBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            if (user.ProfileDescription != model.Description)
+            {
+                user.ProfileDescription = model.Description;
+                if (UnitOfWork.Save() == 0)
+                {
+                    return InternalServerError();
+                }
+            }
+
+            return Ok();
+        }
+
         [Route("EmailConfirm")]
         public IHttpActionResult EmailConfirm(string code)
         {
