@@ -154,7 +154,7 @@ namespace PhotoShare.Models
         {
             //There should only ever be one role because
             //this is my app and I designed it that way
-            return UserManager.GetRoles(id).First();
+            return UserManager.GetRoles(id).FirstOrDefault() ?? "shopper";
         }
 
         #endregion

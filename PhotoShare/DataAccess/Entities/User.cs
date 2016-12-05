@@ -12,6 +12,7 @@ namespace PhotoShare.DataAccess.Entities
         public virtual string LastName { get; set; }
         public virtual string ProfileDescription { get; set; }
         public virtual string ProfilePhoto { get; set; }
+        public virtual string BackgroundPhoto { get; set; }
         public virtual bool AwaitingAdminConfirmation { get; set; }
         public virtual ICollection<Message> Messages { get; set; }
         public virtual ICollection<Purchase> Purchases { get; set; }

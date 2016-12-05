@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
@@ -78,6 +79,24 @@ namespace PhotoShare.Controllers
 
             return Ok(models);
         }
+
+        [Route("Search")]
+        [HttpGet]
+        public IHttpActionResult Search(string q)
+        {
+            var photos = from p in _context.Photos
+                         .Include("Purchases")
+                         .Include("ExifData")
+                         .Include("User")
+                         where p.Name.Contains(q)
+                         select p;
+            ///////////////Change this to single photo model//////////////////////////////
+            var models = photos.Select(_modelFactory.Create);
+
+            return Ok(models);
+        }
+
+
 
         /*POST Requests*/
 
@@ -185,6 +204,10 @@ namespace PhotoShare.Controllers
         [HttpPut]
         public IHttpActionResult UpdatePhoto(int id, SinglePhotoModel model)
         {
+            System.Diagnostics.Debug.WriteLine(HttpContext.Current.Request.Url);
+            System.Diagnostics.Debug.WriteLine(HttpContext.Current.Server.UrlDecode(HttpContext.Current.Request.QueryString["url"]));
+            
+
             if (!ModelState.IsValid)
             {
                 return BadRequest();
@@ -208,7 +231,7 @@ namespace PhotoShare.Controllers
             {
                 photo.Price = model.Price;
             }
-
+            /**/
             photo.UpdatedDateTime = DateTime.Now;
 
             if (model.Exif != null)
