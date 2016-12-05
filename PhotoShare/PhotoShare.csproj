@@ -444,6 +444,7 @@
     <Compile Include="Models\AccountBindingModels\ChangePasswordBindingModel.cs" />
     <Compile Include="Models\AccountBindingModels\RegisterBindingModel.cs" />
     <Compile Include="Models\AdminModels\AdminUserModel.cs" />
+    <Compile Include="Models\AdminModels\ChangeUserRoleModel.cs" />
     <Compile Include="Models\ExifDataModel.cs" />
     <Compile Include="Models\IModelFactory.cs" />
     <Compile Include="Models\MessageModel.cs" />

@@ -114,6 +114,7 @@ namespace PhotoShare.Migrations
             /*AddRole(context, administrator);
             AddRole(context, photographer);
             AddRole(context, "shopper");
+            AddRole(context, "banned");
             AddUser(context, dion, "password", administrator);
             AddUser(context, jack, "password", photographer);
             AddMessage(context, dion, "Testing messages");

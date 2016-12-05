@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
@@ -11,6 +12,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.DataHandler;
+using Microsoft.Owin.Security.OAuth;
 using PhotoShare.App_Start;
 using PhotoShare.DataAccess;
 using PhotoShare.DataAccess.DataContext;
@@ -93,6 +96,7 @@ namespace PhotoShare.Controllers
             //users must wait on admin confirmation before being assigned
             //photographer role
             bool awaitingAdminConfirmation = model.Photographer;
+            var defaultRole = "shopper";
             
             var user = new User() { UserName = model.UserName, Email = model.Email, PhoneNumber = model.PhoneNumber, AwaitingAdminConfirmation = awaitingAdminConfirmation };
 
@@ -103,7 +107,21 @@ namespace PhotoShare.Controllers
                 return GetErrorResult(result);
             }
 
-            await UserManager.AddToRoleAsync(user.Id, "shopper");
+            await UserManager.AddToRoleAsync(user.Id, defaultRole);
+
+            //This should log the user in once registered. Don't have the time to see why it doesn't work
+            /*ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(UserManager,
+               OAuthDefaults.AuthenticationType);
+            var authProps = new Dictionary<string, string>
+            {
+                {"userName", user.UserName},
+                {"firstName", user.FirstName},
+                {"role", defaultRole}
+            };
+            AuthenticationProperties properties = new AuthenticationProperties(authProps);
+            AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
+
+            var token = Startup.OAuthOptions.AccessTokenFormat.Protect(ticket);*/
 
             var email = new Email
             {
@@ -112,7 +130,7 @@ namespace PhotoShare.Controllers
             };
 
             await email.Send();
-            return Ok("Email sent");
+            return Ok();
         }
 
         [Route("ChangePassword")]

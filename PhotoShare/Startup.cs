@@ -16,12 +16,8 @@ namespace PhotoShare
     {
         public void Configuration(IAppBuilder app)
         {
-            System.Diagnostics.Debug.WriteLine("Begin Init");
-
             app.Use(typeof(OwinMiddleWareQueryStringExtractor));
-
-            System.Diagnostics.Debug.WriteLine("End Init");
-
+            
             //This is used to server the index.html file in the project root
             const string rootFolder = ".";
             var fileSystem = new PhysicalFileSystem(rootFolder);
