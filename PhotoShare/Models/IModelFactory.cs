@@ -10,7 +10,7 @@ namespace PhotoShare.Models
         SinglePhotoModel Create(Photo photo);
         Photo Create(SinglePhotoModel model, User currentUser);
         IEnumerable<MultiPhotoModel> Create(IEnumerable<Photo> photos);
-        UserModel Create(User user);
+        UserModel Create(User user, bool authorised);
         IEnumerable<AdminUserModel> Create(IEnumerable<User> users);
         ExifData Create(ExifDataModel model, Photo photo);
         ExifDataModel Create(ExifData exifData);

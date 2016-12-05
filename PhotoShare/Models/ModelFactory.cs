@@ -69,9 +69,9 @@ namespace PhotoShare.Models
             });;
         }
 
-        public UserModel Create(User user)
+        public UserModel Create(User user, bool authorised)
         {
-            return new UserModel
+            var model = new UserModel
             {
                 UserName = user.UserName,
                 FirstName = user.FirstName,
@@ -79,6 +79,11 @@ namespace PhotoShare.Models
                 ProfileDescription = user.ProfileDescription,
                 ProfilePhoto = user.ProfilePhoto
             };
+            if (authorised)
+            {
+                model.Email = user.Email;
+            }
+            return model;
         }
         public IEnumerable<AdminUserModel> Create(IEnumerable<User> users)
         {

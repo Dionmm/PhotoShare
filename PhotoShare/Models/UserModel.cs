@@ -18,5 +18,9 @@ namespace PhotoShare.Models
 
         [Display(Name = "ProfilePhoto")]
         public string ProfilePhoto { get; set; }
+
+        public string BackgroundPhoto { get; set; }
+
+        public string Email { get; set; }
     }
 }

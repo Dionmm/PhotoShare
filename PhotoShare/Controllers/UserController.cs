@@ -132,7 +132,7 @@ namespace PhotoShare.Controllers
                 return NotFound();
             }
 
-            var model = _modelFactory.Create(user);
+            var model = _modelFactory.Create(user, false);
             return Ok(model);
         }
 
@@ -147,7 +147,19 @@ namespace PhotoShare.Controllers
                 return NotFound();
             }
 
-            var model = _modelFactory.Create(user);
+            var model = _modelFactory.Create(user, false);
+            return Ok(model);
+        }
+
+        public IHttpActionResult GetMyUserInfo()
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var model = _modelFactory.Create(user, true);
             return Ok(model);
         }
 
