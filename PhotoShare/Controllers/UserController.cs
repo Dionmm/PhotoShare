@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using System.Web.Routing;
 using MetadataExtractor;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -123,9 +124,24 @@ namespace PhotoShare.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public IHttpActionResult GetUserInfo(string id)
+        public IHttpActionResult GetUserInfoById(string id)
         {
             var user = UserManager.FindById(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var model = _modelFactory.Create(user);
+            return Ok(model);
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("Name/{username}")]
+        public IHttpActionResult GetUserInfoByUsername(string username)
+        {
+            var user = UserManager.FindByName(username);
             if (user == null)
             {
                 return NotFound();
