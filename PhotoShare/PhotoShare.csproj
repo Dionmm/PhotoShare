@@ -437,6 +437,8 @@
       <DependentUpon>201612051154340_AddedBackgroundPhoto.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AccountBindingModels\ChangeEmailBindingModel.cs" />
+    <Compile Include="Models\AccountBindingModels\ChangeNameBindingModel.cs" />
     <Compile Include="Models\AccountBindingModels\ChangePasswordBindingModel.cs" />
     <Compile Include="Models\AccountBindingModels\RegisterBindingModel.cs" />
     <Compile Include="Models\AdminModels\AdminUserModel.cs" />

@@ -28,6 +28,6 @@ namespace PhotoShare.Models.AccountBindingModels
         public string PhoneNumber { get; set; }
 
         [Display(Name = "Photographer")]
-        public string Photographer { get; set; }
+        public bool Photographer { get; set; }
     }
 }

@@ -77,7 +77,8 @@ namespace PhotoShare.Models
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 ProfileDescription = user.ProfileDescription,
-                ProfilePhoto = user.ProfilePhoto
+                ProfilePhoto = user.ProfilePhoto,
+                BackgroundPhoto = user.BackgroundPhoto
             };
             if (authorised)
             {

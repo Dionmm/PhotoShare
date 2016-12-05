@@ -27,13 +27,14 @@ namespace PhotoShare.Controllers
     public class UserController : ApiController
     {
         private ApplicationUserManager _userManager;
+        private IUnitOfWork _unitOfWork;
+        private PhotoShareDbContext _context;
         private readonly IModelFactory _modelFactory;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly PhotoShareDbContext _context = new PhotoShareDbContext();
+
+
         public UserController()
         {
             _modelFactory = new ModelFactory();
-            _unitOfWork = new UnitOfWork(_context);
         }
         public UserController(ApplicationUserManager userManager,
             ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
@@ -47,11 +48,33 @@ namespace PhotoShare.Controllers
         {
             get
             {
-                return _userManager ?? new ApplicationUserManager(new UserStore<User>(_context));
+                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
             }
             private set
             {
                 _userManager = value;
+            }
+        }
+        public PhotoShareDbContext Context
+        {
+            get
+            {
+                return _context ?? Request.GetOwinContext().Request.Context.Get<PhotoShareDbContext>();
+            }
+            private set
+            {
+                _context = value;
+            }
+        }
+        public IUnitOfWork UnitOfWork
+        {
+            get
+            {
+                return _unitOfWork ?? new UnitOfWork(Context);
+            }
+            private set
+            {
+                _unitOfWork = value;
             }
         }
 
@@ -69,7 +92,7 @@ namespace PhotoShare.Controllers
             //Check if the user wants to be registered as a photographer
             //users must wait on admin confirmation before being assigned
             //photographer role
-            bool awaitingAdminConfirmation = model.Photographer == "true";
+            bool awaitingAdminConfirmation = model.Photographer;
             
             var user = new User() { UserName = model.UserName, Email = model.Email, PhoneNumber = model.PhoneNumber, AwaitingAdminConfirmation = awaitingAdminConfirmation };
 
@@ -105,6 +128,56 @@ namespace PhotoShare.Controllers
             if (!result.Succeeded)
             {
                 return GetErrorResult(result);
+            }
+
+            return Ok();
+        }
+
+        [Route("ChangeEmail")]
+        public async Task<IHttpActionResult> ChangeEmail(ChangeEmailBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            if (user.Email != model.NewEmail)
+            {
+                user.Email = model.NewEmail;
+                if (UnitOfWork.Save() == 0)
+                {
+                    return InternalServerError();
+                }
+            }
+
+
+            var email = new Email
+            {
+                ConfirmationCode = UserManager.GenerateEmailConfirmationToken(user.Id),
+                Recipient = user.Email
+            };
+
+            await email.Send();
+
+            return Ok();
+        }
+
+        [Route("ChangeName")]
+        public async Task<IHttpActionResult> ChangeName(ChangeNameBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            if (user.FirstName != model.FirstName || user.LastName != model.LastName)
+            {
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                if (UnitOfWork.Save() == 0)
+                {
+                    return InternalServerError();
+                }
             }
 
             return Ok();
@@ -188,7 +261,7 @@ namespace PhotoShare.Controllers
                     if (currentUser.ProfilePhoto != uri)
                     {
                         currentUser.ProfilePhoto = uri;
-                        if (_unitOfWork.Save() == 0)
+                        if (UnitOfWork.Save() == 0)
                         {
                             return InternalServerError();
                         }
@@ -228,7 +301,7 @@ namespace PhotoShare.Controllers
                     if (currentUser.BackgroundPhoto != uri)
                     {
                         currentUser.BackgroundPhoto = uri;
-                        if (_unitOfWork.Save() == 0)
+                        if (UnitOfWork.Save() == 0)
                         {
                             return InternalServerError();
                         }
