@@ -15,6 +15,7 @@ using PhotoShare.DataAccess;
 using PhotoShare.DataAccess.DataContext;
 using PhotoShare.DataAccess.Entities;
 using PhotoShare.EmailProvider;
+using PhotoShare.ImageHandling;
 using PhotoShare.Models;
 using PhotoShare.Models.AccountBindingModels;
 
@@ -151,9 +152,10 @@ namespace PhotoShare.Controllers
                     }
 
                     var profileName = $"profile{Path.GetExtension(fileName)}";
+                    var thumbnail = new ImageResize().ToJpg(fileStream, 200, 200);
 
                     var blobHandler = new BlobHandler(currentUser.UserName);
-                    var uri = blobHandler.Upload(fileStream, profileName);
+                    var uri = blobHandler.Upload(thumbnail, profileName);
 
                     if (currentUser.ProfilePhoto != uri)
                     {
@@ -190,9 +192,10 @@ namespace PhotoShare.Controllers
                     }
 
                     var backgroundName = $"background{Path.GetExtension(fileName)}";
+                    var thumbnail = new ImageResize().ToJpg(fileStream, 1920, 1080);
 
                     var blobHandler = new BlobHandler(currentUser.UserName);
-                    var uri = blobHandler.Upload(fileStream, backgroundName);
+                    var uri = blobHandler.Upload(thumbnail, backgroundName);
 
                     if (currentUser.BackgroundPhoto != uri)
                     {

@@ -16,6 +16,7 @@ using PhotoShare.App_Start;
 using PhotoShare.DataAccess;
 using PhotoShare.DataAccess.DataContext;
 using PhotoShare.DataAccess.Entities;
+using PhotoShare.ImageHandling;
 using PhotoShare.Models;
 using PhotoShare.Models.PhotoModels;
 using Directory = MetadataExtractor.Directory;
@@ -134,7 +135,7 @@ namespace PhotoShare.Controllers
                     IEnumerable<Directory> directories = ImageMetadataReader.ReadMetadata(fileStream);
 
                     //Creates an optimised thumbnail for the image
-                    var thumbnail = CreateThumbnail(fileStream);
+                    var thumbnail = new ImageResize().ToJpg(fileStream, 500, 500);
 
                     //Generates a GUID + file extension to be used as the blobName
                     var blobName = CreateBlobName(fileName);
@@ -292,59 +293,6 @@ namespace PhotoShare.Controllers
                 {"Original", $"{guid}{extension}"},
                 {"Thumbnail", $"{guid}-thumbnail{extension}"}
             };
-        }
-
-        private static Stream CreateThumbnail(Stream fileStream)
-        {
-            //The file will be corrupted if not read from the beginning
-            fileStream.Position = 0;
-            using (var image = Image.FromStream(fileStream))
-            {
-                Stream outputStream = new MemoryStream();
-                double width;
-                double height;
-
-                if (image.Width > image.Height)
-                {
-                    width = 500;
-                    var ratio = image.Width / width;
-                    height = image.Height / ratio;
-                }
-                else
-                {
-                    height = 500;
-                    var ratio = image.Height / height;
-                    width = image.Width / ratio;
-                }
-
-                var newImage = new Bitmap(Convert.ToInt32(width), Convert.ToInt32(height));
-                var rectangle = new Rectangle(0, 0, Convert.ToInt32(width), Convert.ToInt32(height));
-
-                using (var graphics = Graphics.FromImage(newImage))
-                {
-                    graphics.CompositingQuality = CompositingQuality.HighQuality;
-                    graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    graphics.SmoothingMode = SmoothingMode.HighQuality;
-                    graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                    
-                    graphics.DrawImage(image, rectangle, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel);
-                }
-                ImageCodecInfo[] encoders = ImageCodecInfo.GetImageEncoders();
-
-                foreach (var codec in encoders)
-                {
-                    if (codec.MimeType != "image/jpeg") continue;
-
-                    var encoderParameters = new EncoderParameters
-                    {
-                        Param = { [0] = new EncoderParameter(Encoder.Quality, 90L) }
-                    };
-
-                    newImage.Save(outputStream, codec, encoderParameters);
-                }
-
-                return outputStream;
-            }
         }
 
         #endregion

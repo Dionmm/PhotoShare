@@ -399,6 +399,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Hubs\ChatHub.cs" />
+    <Compile Include="ImageHandling\ImageResize.cs" />
     <Compile Include="Migrations\201611011529047_Initial.cs" />
     <Compile Include="Migrations\201611011529047_Initial.Designer.cs">
       <DependentUpon>201611011529047_Initial.cs</DependentUpon>
