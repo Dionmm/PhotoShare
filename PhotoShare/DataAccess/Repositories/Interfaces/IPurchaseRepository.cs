@@ -4,5 +4,7 @@ namespace PhotoShare.DataAccess.Repositories.Interfaces
 {
     public interface IPurchaseRepository: IRepository<Purchase>
     {
+        int GetNumberOfSalesByPhotoId(int photoId);
+
     }
 }

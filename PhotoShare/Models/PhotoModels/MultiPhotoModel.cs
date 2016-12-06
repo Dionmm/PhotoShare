@@ -35,5 +35,7 @@ namespace PhotoShare.Models.PhotoModels
 
         [Display(Name = "User Last Name")]
         public string UserLastName { get; set; }
+
+        public int Sales { get; set; }
     }
 }

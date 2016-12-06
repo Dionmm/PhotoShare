@@ -5,6 +5,8 @@ using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using PhotoShare.App_Start;
+using PhotoShare.DataAccess;
+using PhotoShare.DataAccess.DataContext;
 using PhotoShare.DataAccess.Entities;
 using PhotoShare.Models.AdminModels;
 using PhotoShare.Models.PhotoModels;
@@ -65,7 +67,8 @@ namespace PhotoShare.Models
                 UserId = photo.User.Id,
                 UserName = photo.User.UserName,
                 UserFirstName = photo.User.FirstName,
-                UserLastName = photo.User.LastName
+                UserLastName = photo.User.LastName,
+                Sales = GetNumberOfSales(photo.Id)
             });;
         }
 
@@ -143,6 +146,8 @@ namespace PhotoShare.Models
         #region helpers
 
         private UserManager<User> _userManager;
+        private PhotoShareDbContext _context;
+        private IUnitOfWork _unitOfWork;
         public UserManager<User> UserManager
         {
             get
@@ -154,13 +159,39 @@ namespace PhotoShare.Models
                 _userManager = value;
             }
         }
-
+        public PhotoShareDbContext Context
+        {
+            get
+            {
+                return _context ?? HttpContext.Current.Request.GetOwinContext().Request.Context.Get<PhotoShareDbContext>();
+            }
+            private set
+            {
+                _context = value;
+            }
+        }
+        public IUnitOfWork UnitOfWork
+        {
+            get
+            {
+                return _unitOfWork ?? new UnitOfWork(Context);
+            }
+            private set
+            {
+                _unitOfWork = value;
+            }
+        }
 
         private string GetUserRoles(string id)
         {
             //There should only ever be one role because
             //this is my app and I designed it that way
             return UserManager.GetRoles(id).FirstOrDefault() ?? "shopper";
+        }
+
+        private int GetNumberOfSales(int id)
+        {
+            return UnitOfWork.Purchases.GetNumberOfSalesByPhotoId(id);
         }
 
         #endregion
