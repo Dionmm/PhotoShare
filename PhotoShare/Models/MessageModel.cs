@@ -10,5 +10,6 @@ namespace PhotoShare.Models
     {
         public string Content { get; set; }
         public string UserName { get; set; }
+        public int Id { get; set; }
     }
 }

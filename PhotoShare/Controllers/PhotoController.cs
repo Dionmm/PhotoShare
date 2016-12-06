@@ -194,7 +194,6 @@ namespace PhotoShare.Controllers
             }
             catch (Exception)
             {
-                throw;
                 return BadRequest();
             }
         }

@@ -17,7 +17,7 @@ namespace PhotoShare.DataAccess.Repositories
         public IEnumerable<Message> GetMostRecentMessages(int pageSize, int page = 0)
         {
             var skipRows = page * pageSize;
-            return Context.Messages.OrderByDescending(x => x.CreatedDateTime).Skip(skipRows).Take(pageSize).ToList();
+            return Context.Messages.OrderByDescending(x => x.CreatedDateTime).Where(h => h.Hidden == false).Skip(skipRows).Take(pageSize).ToList();
         }
     }
 }

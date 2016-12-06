@@ -139,7 +139,8 @@ namespace PhotoShare.Models
             return new MessageModel
             {
                 Content = message.Content,
-                UserName = message.User.UserName
+                UserName = message.User.UserName,
+                Id = message.Id
             };
         }
 

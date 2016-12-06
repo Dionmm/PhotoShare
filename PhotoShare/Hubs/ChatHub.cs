@@ -160,6 +160,54 @@ namespace PhotoShare.Hubs
             }
         }
 
+        public void HideMessage(int messageId)
+        {
+            System.Diagnostics.Debug.WriteLine("ChatBot Begin");
+
+            try
+            {
+                var username = Context.User.Identity.Name;
+                if (username != null)
+                {
+                    CurrentUser = UserManager.FindByName(username);
+                    var roles = UserManager.GetRoles(CurrentUser.Id);
+                    var role = roles.ToArray();
+                    if (role[0] == "administrator")
+                    {
+                        _unitOfWork = new UnitOfWork(_context);
+                        var message = _unitOfWork.Messages.Get(messageId);
+                        if (message != null)
+                        {
+                            message.Hidden = true;
+                            if (_unitOfWork.Save() == 0)
+                            {
+                                Clients.All.error("Something went wrong");
+                            }
+                            else
+                            {
+                                Clients.All.removeMessage(messageId);
+                            }
+                        }
+                        
+                    }
+                    else
+                    {
+                        Clients.Caller.error("Not Authorised");
+                    }
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("No username");
+                    Clients.Caller.error("Username not found");
+
+                }
+            }
+            catch (Exception)
+            {
+                Clients.Caller.error("Something went wrong on the server");
+            }
+        }
+
 
     }
 }
