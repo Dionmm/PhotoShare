@@ -353,7 +353,7 @@ namespace PhotoShare.Controllers
                 throw;
             }
         }
-
+        [AllowAnonymous]
         [Route("Photos/{username}")]
         [HttpGet]
         public IHttpActionResult GetRecentPhotos(string username)
