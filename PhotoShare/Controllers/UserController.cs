@@ -354,6 +354,24 @@ namespace PhotoShare.Controllers
             }
         }
 
+        [Route("Photos/{username}")]
+        [HttpGet]
+        public IHttpActionResult GetRecentPhotos(string username)
+        {
+            var user = UserManager.FindByName(username);
+            if (user == null)
+            {
+                return InternalServerError();
+            }
+            var photos = UnitOfWork.Photos.GetUsersMostRecentPhotos(20, 0, user.Id);
+            if (photos == null)
+            {
+                return Ok("No photos");
+            }
+            var models = _modelFactory.Create(photos);
+
+            return Ok(models);
+        }
 
         #region ErrorHandling
 

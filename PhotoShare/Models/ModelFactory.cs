@@ -103,7 +103,7 @@ namespace PhotoShare.Models
                 TwoFactorEnabled = user.TwoFactorEnabled,
                 LockoutEnabled = user.LockoutEnabled,
                 AccessFailedCount = user.AccessFailedCount.ToString(),
-                AwaitingAdminConfirmation = user.AwaitingAdminConfirmation.ToString(),
+                AwaitingAdminConfirmation = user.AwaitingAdminConfirmation,
                 Role = GetUserRoles(user.Id)
             });
         }

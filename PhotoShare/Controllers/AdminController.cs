@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
@@ -96,6 +97,14 @@ namespace PhotoShare.Controllers
             if (!addRoleResult.Succeeded)
             {
                 return InternalServerError();
+            }
+            if (model.Role == "banned")
+            {
+                var res = await UserManager.SetLockoutEndDateAsync(user.Id, new DateTime(2100, 12, 30));
+                if (!res.Succeeded)
+                {
+                    return InternalServerError();
+                }
             }
 
             return Ok("Added to role");

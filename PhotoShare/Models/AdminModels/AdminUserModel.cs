@@ -36,7 +36,7 @@ namespace PhotoShare.Models.AdminModels
         public string AccessFailedCount { get; set; }
 
         [Display(Name = "Awaiting Admin Confirmation")]
-        public string AwaitingAdminConfirmation { get; set; }
+        public bool AwaitingAdminConfirmation { get; set; }
 
         [Display(Name = "Role")]
         public string Role { get; set; }
